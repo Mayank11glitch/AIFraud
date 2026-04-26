@@ -1,0 +1,61 @@
+# Scam Detection System Requirements
+
+# Core
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.5.0
+python-multipart>=0.0.6
+
+# Database
+sqlalchemy>=2.0.0
+pymysql>=1.1.0
+alembic>=1.12.0
+
+# ML/AI - GPU Enabled
+torch>=2.0.0
+torchvision>=0.15.0
+transformers>=4.35.0
+datasets>=2.14.0
+accelerate>=0.24.0
+sentencepiece>=0.1.99
+
+# Computer Vision
+opencv-python>=4.8.0
+Pillow>=10.1.0
+easyocr>=1.7.0
+
+# NLP
+nltk>=3.8.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+requests>=2.31.0
+
+# Audio/Video Processing
+moviepy>=1.0.3
+numpy>=1.24.0
+
+# Evaluation
+scikit-learn>=1.3.0
+evaluate>=0.4.0
+
+# Utilities
+python-dotenv>=1.0.0
+python-jose>=3.3.0
+passlib>=1.7.4
+python-dateutil>=2.8.2
+
+# ============================================================
+# GPU INSTALLATION INSTRUCTIONS
+# ============================================================
+
+# NVIDIA GPU (CUDA):
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+
+# Apple Silicon (M1/M2/M3):
+# pip install torch torchvision
+
+# Intel/AMD GPU (DirectML):
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/directml
+
+# CPU Only (no GPU):
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
