@@ -19,89 +19,125 @@ from services.gpu_manager import GPU_MGR, DEVICE
 # Print GPU Status
 GPU_MGR.print_status()
 
-# Load Fine-Tuned Custom DistilBERT Model (Highest Accuracy)
-try:
-    print("Loading Fine-Tuned Custom Scam Classifier...")
-    finetuned_classifier = pipeline(
-        "text-classification", 
-        model=os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "scamdetect-finetuned"),
-        device=GPU_MGR.get_device_index(),
-        top_k=None  # Returns all scores
-    )
-    print("Fine-Tuned Custom Model loaded successfully.")
-except Exception as e:
-    print(f"Fine-Tuned model not found ({e}). Falling back to pure zero-shot.")
-    finetuned_classifier = None
+# =====================================================
+# LAZY MODEL LOADING — models load on first use, not at startup.
+# This prevents Render port-scan timeout on cold start.
+# =====================================================
+_models = {}
 
-# Load Fine-Tuned URL Classification Model (for max trust)
-try:
-    print("Loading Fine-Tuned URL Classifier...")
-    url_classifier = pipeline(
-        "text-classification", 
-        model=os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "url-scamdetect-finetuned"),
-        device=GPU_MGR.get_device_index()
-    )
-    print("Fine-Tuned URL Model loaded successfully.")
-except Exception as e:
-    print(f"Fine-Tuned URL model not found ({e}). URL analysis will use heuristics.")
-    url_classifier = None
+def _get_model(name):
+    """Lazy-load a model by name. Returns the model or None on failure."""
+    if name in _models:
+        return _models[name]
 
-# Load a multilingual zero-shot classification model (100+ languages)
-try:
-    print("Loading Multilingual mDeBERTa-v3 classification pipeline...")
-    nlp_classifier = pipeline(
-        "zero-shot-classification", 
-        model="MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7",
-        device=GPU_MGR.get_device_index()
-    )
-    print("Multilingual mDeBERTa-v3 loaded successfully (100+ languages).")
-except Exception as e:
-    print(f"Error loading multilingual model: {e}")
-    print("Falling back to BART-large-MNLI (English only)...")
     try:
-        nlp_classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=GPU_MGR.get_device_index())
-        print("Fallback BART model loaded.")
-    except Exception as e2:
-        print(f"Fallback also failed: {e2}")
-        nlp_classifier = None
+        if name == "finetuned_classifier":
+            model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "scamdetect-finetuned")
+            if not os.path.isdir(model_path):
+                print(f"Fine-tuned model directory not found: {model_path}")
+                _models[name] = None
+                return None
+            print("Loading Fine-Tuned Custom Scam Classifier...")
+            _models[name] = pipeline(
+                "text-classification",
+                model=model_path,
+                device=GPU_MGR.get_device_index(),
+                top_k=None
+            )
+            print("Fine-Tuned Custom Model loaded successfully.")
 
-# Load CLIP model for visual classification of images/video frames
-try:
-    print("Loading CLIP visual classification model...")
-    clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(GPU_MGR.get_device())
-    clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-    print(f"CLIP model loaded successfully (on {DEVICE.upper()}).")
-except Exception as e:
-    print(f"Error loading CLIP model: {e}")
-    clip_model = None
-    clip_processor = None
+        elif name == "url_classifier":
+            model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "url-scamdetect-finetuned")
+            if not os.path.isdir(model_path):
+                print(f"Fine-tuned URL model directory not found: {model_path}")
+                _models[name] = None
+                return None
+            print("Loading Fine-Tuned URL Classifier...")
+            _models[name] = pipeline(
+                "text-classification",
+                model=model_path,
+                device=GPU_MGR.get_device_index()
+            )
+            print("Fine-Tuned URL Model loaded successfully.")
 
-# Load Whisper model for audio transcription
-try:
-    import whisper
-    print("Loading Whisper 'tiny' model...")
-    # Whisper supports: "cuda", "cpu", "mps"
-    whisper_device = "cuda" if DEVICE == "cuda" else ("mps" if DEVICE == "mps" else "cpu")
-    whisper_model = whisper.load_model("tiny", device=whisper_device)
-    print(f"Whisper model loaded successfully (on {DEVICE.upper()}).")
-except Exception as e:
-    print(f"Error loading Whisper model: {e}")
-    whisper_model = None
+        elif name == "nlp_classifier":
+            print("Loading Multilingual mDeBERTa-v3 classification pipeline...")
+            try:
+                _models[name] = pipeline(
+                    "zero-shot-classification",
+                    model="MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7",
+                    device=GPU_MGR.get_device_index()
+                )
+                print("Multilingual mDeBERTa-v3 loaded successfully.")
+            except Exception:
+                print("Falling back to BART-large-MNLI...")
+                _models[name] = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=GPU_MGR.get_device_index())
 
-# Load Deepfake Detection Model (ViT-based) - Use working model
-try:
-    print("Loading Deepfake Detection model...")
-    from transformers import AutoImageProcessor, AutoModelForImageClassification
-    # Try a different model that supports image classification properly
-    deepfake_processor = AutoImageProcessor.from_pretrained("hamzenium/ViT-Deepfake-Classifier")
-    deepfake_model = AutoModelForImageClassification.from_pretrained("hamzenium/ViT-Deepfake-Classifier")
-    deepfake_model = deepfake_model.to(GPU_MGR.get_device())
-    deepfake_model.eval()
-    print(f"Deepfake detector loaded successfully (on {DEVICE.upper()}).")
-except Exception as e:
-    print(f"Error loading Deepfake model: {e}")
-    deepfake_model = None
-    deepfake_processor = None
+        elif name == "clip_model":
+            print("Loading CLIP visual classification model...")
+            _models["clip_model"] = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(GPU_MGR.get_device())
+            _models["clip_processor"] = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+            print(f"CLIP model loaded successfully (on {DEVICE.upper()}).")
+
+        elif name == "clip_processor":
+            # Loading clip_model also loads clip_processor
+            _get_model("clip_model")
+            return _models.get("clip_processor")
+
+        elif name == "whisper_model":
+            import whisper
+            print("Loading Whisper 'tiny' model...")
+            whisper_device = "cuda" if DEVICE == "cuda" else ("mps" if DEVICE == "mps" else "cpu")
+            _models[name] = whisper.load_model("tiny", device=whisper_device)
+            print(f"Whisper model loaded successfully (on {DEVICE.upper()}).")
+
+        elif name == "deepfake_model":
+            print("Loading Deepfake Detection model...")
+            from transformers import AutoImageProcessor, AutoModelForImageClassification
+            _models["deepfake_processor"] = AutoImageProcessor.from_pretrained("hamzenium/ViT-Deepfake-Classifier")
+            _models["deepfake_model"] = AutoModelForImageClassification.from_pretrained("hamzenium/ViT-Deepfake-Classifier").to(GPU_MGR.get_device())
+            _models["deepfake_model"].eval()
+            print(f"Deepfake detector loaded successfully (on {DEVICE.upper()}).")
+
+        elif name == "deepfake_processor":
+            _get_model("deepfake_model")
+            return _models.get("deepfake_processor")
+
+    except Exception as e:
+        print(f"Error loading model '{name}': {e}")
+        _models[name] = None
+
+    return _models.get(name)
+
+
+# Convenience accessors (drop-in replacements for the old global variables)
+@property
+def _lazy():
+    pass
+
+def _finetuned():
+    return _get_model("finetuned_classifier")
+
+def _url_clf():
+    return _get_model("url_classifier")
+
+def _nlp_clf():
+    return _get_model("nlp_classifier")
+
+def _clip_m():
+    return _get_model("clip_model")
+
+def _clip_p():
+    return _get_model("clip_processor")
+
+def _whisper():
+    return _get_model("whisper_model")
+
+def _deepfake_m():
+    return _get_model("deepfake_model")
+
+def _deepfake_p():
+    return _get_model("deepfake_processor")
 
 # CLIP labels for scam image classification
 CLIP_SCAM_LABELS = [
@@ -151,9 +187,9 @@ def ensemble_analyze_text(text: str, finetuned_classifier, nlp_classifier, ds) -
     
     # 1. Fine-tuned model prediction
     ft_risk = 0.0
-    if finetuned_classifier:
+    if _finetuned():
         try:
-            result_ft = finetuned_classifier(text, top_k=None)
+            result_ft = _finetuned()(text, top_k=None)
             entries = result_ft[0] if isinstance(result_ft[0], list) else result_ft
             scores_ft = {entry['label']: entry['score'] for entry in entries}
             
@@ -172,9 +208,9 @@ def ensemble_analyze_text(text: str, finetuned_classifier, nlp_classifier, ds) -
     
     # 2. Zero-shot model prediction
     zs_risk = 0.0
-    if nlp_classifier:
+    if _nlp_clf():
         try:
-            result_zs = nlp_classifier(text, CANDIDATE_LABELS, multi_label=True)
+            result_zs = _nlp_clf()(text, CANDIDATE_LABELS, multi_label=True)
             scores_zs = dict(zip(result_zs['labels'], result_zs['scores']))
             
             malicious_scores = [
@@ -253,7 +289,7 @@ def check_adversarial_input(text: str) -> tuple:
 @functools.lru_cache(maxsize=128)
 def analyze_text_with_nlp(text: str):
     empty_profile = {"Urgency": 0.0, "Fear": 0.0, "Authority": 0.0, "Reward": 0.0}
-    if not nlp_classifier:
+    if not _nlp_clf():
         print("NLP Model not available. Returning fallback.")
         return 50.0, "Unknown", [], [], empty_profile
         
@@ -278,11 +314,11 @@ def analyze_text_with_nlp(text: str):
     try:
         # Use ensemble approach for better accuracy
         ensemble_risk, ensemble_cats, component_scores = ensemble_analyze_text(
-            text, finetuned_classifier, nlp_classifier, ds
+            text, _finetuned(), _nlp_clf(), ds
         )
         
         # Get zero-shot scores for XAI explanations
-        result_zs = nlp_classifier(text, CANDIDATE_LABELS, multi_label=True)
+        result_zs = _nlp_clf()(text, CANDIDATE_LABELS, multi_label=True)
         scores_zs = dict(zip(result_zs['labels'], result_zs['scores']))
         
         # Apply adjustments
@@ -371,12 +407,12 @@ def analyze_text_with_nlp(text: str):
 
 def classify_image_with_clip(pil_image):
     """Use CLIP to visually classify an image for scam content."""
-    if not clip_model or not clip_processor:
+    if not _clip_m() or not _clip_p():
         return 0.0, [], []
     
     try:
         from PIL import Image
-        inputs = clip_processor(
+        inputs = _clip_p()(
             text=CLIP_SCAM_LABELS, 
             images=pil_image, 
             return_tensors="pt", 
@@ -387,7 +423,7 @@ def classify_image_with_clip(pil_image):
         inputs = {k: v.to(GPU_MGR.get_device()) if isinstance(v, torch.Tensor) else v for k, v in inputs.items()}
         
         with torch.no_grad():
-            outputs = clip_model(**inputs)
+            outputs = _clip_m()(**inputs)
             logits = outputs.logits_per_image[0]
             probs = logits.softmax(dim=0).tolist()
         
@@ -437,15 +473,15 @@ def detect_deepfake_faces(pil_image):
         is_deepfake: boolean
         explanation: FeatureExplanation if detected
     """
-    if not deepfake_model or not deepfake_processor:
+    if not _deepfake_m() or not _deepfake_p():
         return 0.0, False, None
     
     try:
-        inputs = deepfake_processor(images=pil_image, return_tensors="pt")
+        inputs = _deepfake_p()(images=pil_image, return_tensors="pt")
         inputs = {k: v.to(GPU_MGR.get_device()) if isinstance(v, torch.Tensor) else v for k, v in inputs.items()}
         
         with torch.no_grad():
-            outputs = deepfake_model(**inputs)
+            outputs = _deepfake_m()(**inputs)
             logits = outputs.logits
             probs = torch.softmax(logits, dim=1)[0]
         
@@ -454,7 +490,7 @@ def detect_deepfake_faces(pil_image):
         confidence = probs[predicted_class].item()
         
         # Check model labels
-        label_map = deepfake_model.config.id2label if hasattr(deepfake_model.config, 'id2label') else {}
+        label_map = _deepfake_m().config.id2label if hasattr(_deepfake_m().config, 'id2label') else {}
         
         deepfake_prob = 0.0
         is_likely_deepfake = False
@@ -637,9 +673,9 @@ def process_url(url: str) -> ScanningResult:
     explanations = []
     
     # 1. Deep Learning Analysis (Highest Trust)
-    if url_classifier:
+    if _url_clf():
         try:
-            res = url_classifier(url)
+            res = _url_clf()(url)
             # res is usually [{'label': 'url_phishing', 'score': 0.99...}]
             scores = {entry['label']: entry['score'] for entry in (res[0] if isinstance(res[0], list) else res)}
             phish_score = scores.get("url_phishing", 0)
@@ -800,7 +836,7 @@ def _analyze_visual_stream(tmp_video_path):
                 risk_contribution=round(visual_risk * 0.4, 1)
             ))
             
-        if deepfake_model and deepfake_processor and pil_frames:
+        if _deepfake_m() and _deepfake_p() and pil_frames:
             max_deepfake = 0.0
             deepfake_detected = False
             df_expls = []
@@ -841,9 +877,9 @@ def _analyze_audio_stream(tmp_video_path):
             clip.audio.write_audiofile(tmp_audio_path, logger=None)
             clip.close()
             
-            if whisper_model:
+            if _whisper():
                 print("Transcribing video audio with Whisper...")
-                result = whisper_model.transcribe(tmp_audio_path)
+                result = _whisper().transcribe(tmp_audio_path)
                 transcript_text = result.get("text", "").strip()
                 detected_lang = result.get("language", "unknown")
             else:
