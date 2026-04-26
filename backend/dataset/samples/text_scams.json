@@ -1,0 +1,562 @@
+[
+    {
+        "id": "upi_001",
+        "category": "upi_fraud",
+        "label": "scam",
+        "risk_score": 95,
+        "text": "Dear Customer, your UPI ID has been blocked due to suspicious activity. Click this link to verify and reactivate: http://upi-verify.xyz/reactivate",
+        "keywords": [
+            "UPI",
+            "blocked",
+            "verify",
+            "reactivate"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "upi_002",
+        "category": "upi_fraud",
+        "label": "scam",
+        "risk_score": 98,
+        "text": "ALERT! Rs.49,999 has been debited from your account via UPI. If not done by you, call 9876543210 immediately to block transaction.",
+        "keywords": [
+            "debited",
+            "UPI",
+            "block transaction",
+            "call immediately"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "upi_003",
+        "category": "upi_fraud",
+        "label": "scam",
+        "risk_score": 90,
+        "text": "Dear Sir/Madam, your PhonePe/GPay account will be suspended in 24 hours. Complete KYC by sending Aadhaar copy to this number: 8765432109",
+        "keywords": [
+            "PhonePe",
+            "GPay",
+            "suspended",
+            "KYC",
+            "Aadhaar"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "upi_004",
+        "category": "upi_fraud",
+        "label": "scam",
+        "risk_score": 92,
+        "text": "You have received a cashback of Rs.500 on your last UPI transaction! To claim, enter your UPI PIN at http://cashback-claim.in",
+        "keywords": [
+            "cashback",
+            "UPI PIN",
+            "claim"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "upi_005",
+        "category": "upi_fraud",
+        "label": "scam",
+        "risk_score": 96,
+        "text": "RBI NOTICE: Your UPI transactions are being monitored for illegal activity. Pay penalty of Rs.2000 within 24 hrs or face legal action. UPI: penalty@rbi",
+        "keywords": [
+            "RBI",
+            "penalty",
+            "legal action",
+            "illegal activity"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "upi_006",
+        "category": "upi_fraud",
+        "label": "scam",
+        "risk_score": 88,
+        "text": "Aapke UPI account mein Rs.15,000 aaye hain. Confirm karne ke liye ye link kholein: http://upi-confirm.xyz. Jaldi karein warna refund ho jayega.",
+        "keywords": [
+            "UPI",
+            "confirm",
+            "refund",
+            "jaldi"
+        ],
+        "language": "hi"
+    },
+    {
+        "id": "kyc_001",
+        "category": "kyc_phishing",
+        "label": "scam",
+        "risk_score": 94,
+        "text": "URGENT: Your PAN card has been linked to multiple bank accounts. Update your KYC immediately at http://pan-update.co.in or your accounts will be frozen.",
+        "keywords": [
+            "PAN card",
+            "KYC",
+            "frozen",
+            "update immediately"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "kyc_002",
+        "category": "kyc_phishing",
+        "label": "scam",
+        "risk_score": 96,
+        "text": "SBI Alert: Your account KYC is expiring today. Submit Aadhaar + PAN to avoid account suspension. Upload here: http://sbi-kyc-update.com",
+        "keywords": [
+            "SBI",
+            "KYC expiring",
+            "Aadhaar",
+            "PAN",
+            "suspension"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "kyc_003",
+        "category": "kyc_phishing",
+        "label": "scam",
+        "risk_score": 93,
+        "text": "Dear HDFC Customer, your KYC verification is pending. Your account will be deactivated in 48 hours. Complete now: http://hdfc-kyc.online",
+        "keywords": [
+            "HDFC",
+            "KYC verification",
+            "deactivated",
+            "48 hours"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "kyc_004",
+        "category": "kyc_phishing",
+        "label": "scam",
+        "risk_score": 91,
+        "text": "Paytm KYC Expired! Your Paytm wallet will be blocked permanently. Update Aadhaar details now on http://paytm-kyc-renew.in",
+        "keywords": [
+            "Paytm",
+            "KYC Expired",
+            "blocked permanently",
+            "Aadhaar"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "kyc_005",
+        "category": "kyc_phishing",
+        "label": "scam",
+        "risk_score": 89,
+        "text": "ICICI Bank: Aapka KYC update nahi hua hai. Abhi apna Aadhaar number 9988776655 par WhatsApp karein warna account band ho jayega.",
+        "keywords": [
+            "ICICI",
+            "KYC",
+            "Aadhaar",
+            "WhatsApp",
+            "account band"
+        ],
+        "language": "hi"
+    },
+    {
+        "id": "lottery_001",
+        "category": "lottery_scam",
+        "label": "scam",
+        "risk_score": 100,
+        "text": "CONGRATULATIONS!!! You have won Rs.25,00,000 in the Jio Lucky Draw 2026! To claim your prize, send your Aadhaar, PAN, and bank details to jiodraw2026@gmail.com",
+        "keywords": [
+            "won",
+            "Jio Lucky Draw",
+            "claim prize",
+            "Aadhaar",
+            "PAN",
+            "bank details"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "lottery_002",
+        "category": "lottery_scam",
+        "label": "scam",
+        "risk_score": 98,
+        "text": "Dear User, your mobile number has been selected for KBC (Kaun Banega Crorepati) jackpot of Rs.50 Lakh! Contact manager Amit Sharma at 7654321098 to claim.",
+        "keywords": [
+            "KBC",
+            "jackpot",
+            "50 Lakh",
+            "claim",
+            "contact manager"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "lottery_003",
+        "category": "lottery_scam",
+        "label": "scam",
+        "risk_score": 97,
+        "text": "Amazon Gift Card Alert! You have won a FREE Amazon voucher worth Rs.10,000. Click here to redeem NOW: http://amazon-gift-india.xyz",
+        "keywords": [
+            "Amazon",
+            "gift card",
+            "FREE",
+            "voucher",
+            "redeem"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "lottery_004",
+        "category": "lottery_scam",
+        "label": "scam",
+        "risk_score": 99,
+        "text": "Flipkart Big Billion Day Winner! Aapne jeeta hai Samsung Galaxy S25 Ultra! Courier charges Rs.999 pay karein UPI par: flipkart@ybl",
+        "keywords": [
+            "Flipkart",
+            "winner",
+            "jeeta",
+            "courier charges",
+            "UPI"
+        ],
+        "language": "hi"
+    },
+    {
+        "id": "otp_001",
+        "category": "otp_theft",
+        "label": "scam",
+        "risk_score": 97,
+        "text": "This is SBI customer care. We are updating our system. Please share the OTP sent to your registered mobile number for verification. Do not share with anyone else.",
+        "keywords": [
+            "SBI",
+            "customer care",
+            "share OTP",
+            "verification"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "otp_002",
+        "category": "otp_theft",
+        "label": "scam",
+        "risk_score": 95,
+        "text": "Dear customer, a refund of Rs.3,499 is pending. To process, please share the 6-digit OTP received on your mobile. Call 1800XXXXXXX for assistance.",
+        "keywords": [
+            "refund pending",
+            "share OTP",
+            "6-digit"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "otp_003",
+        "category": "otp_theft",
+        "label": "scam",
+        "risk_score": 93,
+        "text": "Aapke account mein ek galat transaction hua hai. Cancel karne ke liye apna OTP batayein. RBI helpline se call kar rahe hain.",
+        "keywords": [
+            "galat transaction",
+            "OTP batayein",
+            "RBI helpline"
+        ],
+        "language": "hi"
+    },
+    {
+        "id": "whatsapp_001",
+        "category": "whatsapp_forward",
+        "label": "scam",
+        "risk_score": 85,
+        "text": "BREAKING: Modi government is giving Rs.6,000 to every citizen under PM Kisan Yojana extension! Register now before March 31: http://pmkisan-bonus.in. Forward to 10 people to confirm registration!",
+        "keywords": [
+            "Modi government",
+            "Rs.6000",
+            "PM Kisan",
+            "register now",
+            "forward to 10"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "whatsapp_002",
+        "category": "whatsapp_forward",
+        "label": "scam",
+        "risk_score": 80,
+        "text": "WhatsApp is shutting down if you don't forward this message to 20 contacts! Also get WhatsApp Gold premium version FREE! Download: http://whatsapp-gold.apk",
+        "keywords": [
+            "WhatsApp shutting down",
+            "forward",
+            "WhatsApp Gold",
+            "FREE"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "whatsapp_003",
+        "category": "whatsapp_forward",
+        "label": "scam",
+        "risk_score": 88,
+        "text": "RATION CARD holders will receive Rs.1500 monthly from April 2026! Apply online: http://ration-scheme.gov.in.xyz. Share this message with all relatives!",
+        "keywords": [
+            "ration card",
+            "Rs.1500 monthly",
+            "apply online",
+            "share"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "whatsapp_004",
+        "category": "whatsapp_forward",
+        "label": "scam",
+        "risk_score": 82,
+        "text": "Petrol price will be Rs.50/litre from tomorrow as per new government order! Save this message. Also fill this form for fuel subsidy: http://fuel-subsidy-india.com",
+        "keywords": [
+            "petrol",
+            "government order",
+            "subsidy",
+            "fill form"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "job_001",
+        "category": "job_scam",
+        "label": "scam",
+        "risk_score": 90,
+        "text": "TATA Group is hiring 5000 freshers! Salary Rs.45,000/month. No interview needed. Pay Rs.500 registration fee at http://tata-careers-india.com",
+        "keywords": [
+            "TATA Group",
+            "hiring",
+            "no interview",
+            "registration fee"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "job_002",
+        "category": "job_scam",
+        "label": "scam",
+        "risk_score": 92,
+        "text": "Work from home opportunity! Earn Rs.30,000-50,000 per month. Simple data entry. Join WhatsApp group: https://chat.whatsapp.com/xyz123. Deposit Rs.1,000 as security.",
+        "keywords": [
+            "work from home",
+            "earn",
+            "data entry",
+            "deposit",
+            "security"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "job_003",
+        "category": "job_scam",
+        "label": "scam",
+        "risk_score": 88,
+        "text": "Indian Railway Recruitment 2026: 10th Pass vacancy for 15,000 posts. Apply now and pay Rs.250 exam fee online: http://railway-recruitment-board.in",
+        "keywords": [
+            "Indian Railway",
+            "recruitment",
+            "vacancy",
+            "exam fee"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "job_004",
+        "category": "job_scam",
+        "label": "scam",
+        "risk_score": 85,
+        "text": "Amazon/Flipkart product review job! Rate products and earn Rs.5000 daily. Contact HR: +91-9876543210. Training fee Rs.2000 (refundable).",
+        "keywords": [
+            "product review",
+            "earn daily",
+            "training fee",
+            "refundable"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "invest_001",
+        "category": "investment_scam",
+        "label": "scam",
+        "risk_score": 95,
+        "text": "GUARANTEED 30% returns monthly! Invest Rs.10,000 in our crypto trading platform and earn Rs.3,00,000 in 30 days. Limited seats. Join Telegram: t.me/cryptoking_india",
+        "keywords": [
+            "guaranteed returns",
+            "crypto",
+            "invest",
+            "limited seats",
+            "Telegram"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "invest_002",
+        "category": "investment_scam",
+        "label": "scam",
+        "risk_score": 97,
+        "text": "IPO Alert! Invest Rs.5,000 in pre-IPO shares of Reliance Digital. 500% returns guaranteed. Share market expert advice. Pay now: invest@ybl",
+        "keywords": [
+            "IPO",
+            "pre-IPO",
+            "guaranteed returns",
+            "500%",
+            "pay now"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "invest_003",
+        "category": "investment_scam",
+        "label": "scam",
+        "risk_score": 93,
+        "text": "SIP scheme by RBI - Get Rs.1 crore in 5 years by investing Rs.500/month! This is NOT a normal SIP. Register on http://rbi-sip-scheme.co.in",
+        "keywords": [
+            "SIP",
+            "RBI",
+            "Rs.1 crore",
+            "register"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "imperson_001",
+        "category": "impersonation",
+        "label": "scam",
+        "risk_score": 96,
+        "text": "This is Cyber Crime Branch, Delhi Police. Your Aadhaar number has been used for money laundering. Case FIR No. 2026/CR/4521. Contact Inspector Verma at 9988776655 immediately or arrest warrant will be issued.",
+        "keywords": [
+            "Cyber Crime",
+            "Delhi Police",
+            "Aadhaar",
+            "money laundering",
+            "FIR",
+            "arrest warrant"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "imperson_002",
+        "category": "impersonation",
+        "label": "scam",
+        "risk_score": 98,
+        "text": "CBI Notice: Your bank account is linked to a hawala racket investigation. Freeze order pending. Transfer Rs.50,000 to safe account immediately. Contact Agent ID: CBI-2026-7890.",
+        "keywords": [
+            "CBI",
+            "hawala racket",
+            "freeze order",
+            "safe account",
+            "transfer"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "imperson_003",
+        "category": "impersonation",
+        "label": "scam",
+        "risk_score": 94,
+        "text": "TRAI (Telecom Authority) Alert: Your mobile number will be disconnected in 2 hours for sending spam. Press 1 to speak to officer. Penalty Rs.25,000.",
+        "keywords": [
+            "TRAI",
+            "disconnected",
+            "spam",
+            "penalty",
+            "press 1"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "imperson_004",
+        "category": "impersonation",
+        "label": "scam",
+        "risk_score": 90,
+        "text": "Income Tax Department: Aapke PAN par Rs.8,50,000 ka undisclosed income mila hai. 72 ghante mein jawab dein ya prosecution hogi. Helpline: 9876540000",
+        "keywords": [
+            "Income Tax",
+            "PAN",
+            "undisclosed income",
+            "prosecution"
+        ],
+        "language": "hi"
+    },
+    {
+        "id": "delivery_001",
+        "category": "delivery_scam",
+        "label": "scam",
+        "risk_score": 85,
+        "text": "Your Flipkart order #FK2026789 is held at customs. Pay customs duty of Rs.499 to release. Pay here: http://flipkart-customs.xyz",
+        "keywords": [
+            "Flipkart",
+            "customs",
+            "customs duty",
+            "pay"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "delivery_002",
+        "category": "delivery_scam",
+        "label": "scam",
+        "risk_score": 82,
+        "text": "India Post: Your parcel (tracking: IN123456789) could not be delivered. Pay Rs.25 redelivery charge at http://indiapost-redeliver.com to reschedule.",
+        "keywords": [
+            "India Post",
+            "parcel",
+            "redelivery charge",
+            "reschedule"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "delivery_003",
+        "category": "delivery_scam",
+        "label": "scam",
+        "risk_score": 87,
+        "text": "Amazon Delivery Failed! Your package is at nearest warehouse. Verify address and pay Rs.49 handling fee: http://amz-delivery-india.in",
+        "keywords": [
+            "Amazon",
+            "delivery failed",
+            "verify address",
+            "handling fee"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "tax_001",
+        "category": "tax_scam",
+        "label": "scam",
+        "risk_score": 92,
+        "text": "IT Department: You are eligible for income tax refund of Rs.15,600. Claim now by providing bank details at http://incometax-refund.gov.in.xyz",
+        "keywords": [
+            "IT Department",
+            "tax refund",
+            "claim now",
+            "bank details"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "tax_002",
+        "category": "tax_scam",
+        "label": "scam",
+        "risk_score": 90,
+        "text": "GST Registration cancelled! Your GSTIN has been deactivated for non-compliance. Re-register within 7 days: http://gst-reactivate.co.in. Penalty of Rs.50,000 otherwise.",
+        "keywords": [
+            "GST",
+            "GSTIN",
+            "deactivated",
+            "non-compliance",
+            "penalty"
+        ],
+        "language": "en"
+    },
+    {
+        "id": "tax_003",
+        "category": "tax_scam",
+        "label": "scam",
+        "risk_score": 88,
+        "text": "Form 16 Tax Notice: You owe Rs.1,25,000 in unpaid taxes for FY 2025-26. Pay immediately via UPI to avoid 300% penalty. UPI: taxdept@sbi",
+        "keywords": [
+            "Form 16",
+            "unpaid taxes",
+            "pay immediately",
+            "300% penalty"
+        ],
+        "language": "en"
+    }
+]

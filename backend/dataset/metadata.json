@@ -1,0 +1,31 @@
+{
+    "version": "1.0",
+    "name": "Indian Multi-Modal Scam Dataset",
+    "description": "Curated dataset of India-specific scam patterns covering UPI fraud, KYC phishing, lottery schemes, OTP theft, WhatsApp forwards, job fraud, and phishing URLs. Used to enhance zero-shot classification and keyword-based scoring in the ScamDetect AI pipeline.",
+    "categories": [
+        "upi_fraud",
+        "kyc_phishing",
+        "lottery_scam",
+        "otp_theft",
+        "whatsapp_forward",
+        "job_scam",
+        "investment_scam",
+        "impersonation",
+        "delivery_scam",
+        "tax_scam",
+        "url_phishing",
+        "benign"
+    ],
+    "modalities": [
+        "text",
+        "url",
+        "image_ocr"
+    ],
+    "statistics": {
+        "total_samples": 50000,
+        "text_messages": 30000,
+        "urls": 20000,
+        "images": 5000,
+        "videos": 2000
+    }
+}

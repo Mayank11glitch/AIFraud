@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv*/
+backend/venv/
+backend/.venv*/
+
+# ML model files (upload to HuggingFace Hub instead)
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.onnx
+backend/models/scamdetect-finetuned/
+backend/models/url-scamdetect-finetuned/
+
+# Database
+*.db
+*.sqlite3
+
+# Node
+node_modules/
+frontend/dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.production
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dataset videos (too large for git)
+backend/dataset/data/videos/

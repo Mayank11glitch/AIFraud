@@ -1,0 +1,157 @@
+[
+    {
+        "id": "url_001",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 95,
+        "url": "http://sbi-netbanking-login.xyz/verify",
+        "indicators": [
+            "impersonates_bank",
+            "non_standard_tld",
+            "login_keyword"
+        ],
+        "description": "Fake SBI netbanking portal on suspicious TLD"
+    },
+    {
+        "id": "url_002",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 90,
+        "url": "http://192.168.43.12/hdfc-secure/login.php",
+        "indicators": [
+            "ip_address_domain",
+            "bank_impersonation",
+            "php_login"
+        ],
+        "description": "IP-based phishing URL impersonating HDFC Bank"
+    },
+    {
+        "id": "url_003",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 88,
+        "url": "https://paytm-kyc-update.herokuapp.com/verify-aadhaar",
+        "indicators": [
+            "free_hosting",
+            "kyc_keyword",
+            "aadhaar_keyword"
+        ],
+        "description": "Paytm KYC phishing hosted on free platform"
+    },
+    {
+        "id": "url_004",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 92,
+        "url": "http://incometax-efiling.gov.in.phishingsite.com/refund",
+        "indicators": [
+            "subdomain_spoofing",
+            "gov_impersonation",
+            "refund_keyword"
+        ],
+        "description": "Income Tax e-filing portal spoof using subdomain trick"
+    },
+    {
+        "id": "url_005",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 85,
+        "url": "https://flipkart-bigbillion-winner.blogspot.com/claim",
+        "indicators": [
+            "free_hosting",
+            "ecommerce_impersonation",
+            "winner_keyword"
+        ],
+        "description": "Flipkart winner scam on free Blogspot hosting"
+    },
+    {
+        "id": "url_006",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 93,
+        "url": "http://aadhaar-update-uidai.co.in/link-mobile",
+        "indicators": [
+            "uidai_impersonation",
+            "aadhaar_keyword",
+            "suspicious_domain"
+        ],
+        "description": "Fake UIDAI Aadhaar update portal"
+    },
+    {
+        "id": "url_007",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 87,
+        "url": "https://irctc-ticket-refund.xyz/process?pnr=1234567890",
+        "indicators": [
+            "railway_impersonation",
+            "refund_keyword",
+            "non_standard_tld"
+        ],
+        "description": "Fake IRCTC refund portal"
+    },
+    {
+        "id": "url_008",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 96,
+        "url": "http://gpay-cashback-offer.in/claim-reward",
+        "indicators": [
+            "payment_app_impersonation",
+            "cashback_keyword",
+            "suspicious_tld"
+        ],
+        "description": "Google Pay cashback scam portal"
+    },
+    {
+        "id": "url_009",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 91,
+        "url": "https://epfo-pf-withdrawal.netlify.app/apply",
+        "indicators": [
+            "epfo_impersonation",
+            "free_hosting",
+            "withdrawal_keyword"
+        ],
+        "description": "Fake EPFO PF withdrawal portal"
+    },
+    {
+        "id": "url_010",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 89,
+        "url": "http://amazon.in.order-cancel-refund.com/confirm",
+        "indicators": [
+            "subdomain_spoofing",
+            "ecommerce_impersonation",
+            "refund_keyword"
+        ],
+        "description": "Amazon India order cancellation phishing"
+    },
+    {
+        "id": "url_011",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 94,
+        "url": "http://pm-awas-yojana-apply.in/register",
+        "indicators": [
+            "government_scheme_impersonation",
+            "registration_keyword"
+        ],
+        "description": "Fake PM Awas Yojana registration portal"
+    },
+    {
+        "id": "url_012",
+        "category": "url_phishing",
+        "label": "scam",
+        "risk_score": 86,
+        "url": "https://jio-recharge-free.co/offer?mobile=9876543210",
+        "indicators": [
+            "telecom_impersonation",
+            "free_keyword",
+            "mobile_number_in_url"
+        ],
+        "description": "Jio free recharge scam portal"
+    }
+]

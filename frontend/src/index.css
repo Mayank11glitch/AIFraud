@@ -1,0 +1,464 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/container-queries";
+
+@theme {
+  --color-primary: #111111;
+  --color-primary-dark: #000000;
+  --color-primary-light: #f2f2f2;
+  --color-background-light: #f2f2f2;
+  --color-background-dark: #1e1e1e;
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #1e1e1e;
+  --color-border-light: rgba(30, 30, 30, 0.1);
+  --color-border-dark: rgba(255, 255, 255, 0.05);
+  --color-text-main-light: #111111;
+  --color-text-main-dark: #f6f6f6;
+  --color-text-muted-light: #838282;
+  --color-text-muted-dark: #b6b5b5;
+  --font-display: "Clash Display", sans-serif;
+  --font-sans: "Satoshi", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-serif: "Playfair Display", serif;
+
+  --radius-DEFAULT: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 9999px;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Satoshi", system-ui, sans-serif;
+  font-weight: 500;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background-color: #f2f2f2;
+  color: #111111;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+#root {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* ============================================
+   Swiss Typography System
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Clash Display", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: #111111;
+}
+
+h1 {
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+h2 {
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+h3 {
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.0;
+}
+
+/* Buttons & interactive elements */
+button, [role="button"], input[type="submit"] {
+  font-family: "Satoshi", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+/* Code & data elements */
+code, pre, kbd, samp, .font-mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace !important;
+}
+
+/* Utility classes */
+.font-display {
+  font-family: "Clash Display", sans-serif;
+  letter-spacing: -0.05em;
+}
+
+.font-body {
+  font-family: "Satoshi", system-ui, sans-serif;
+}
+
+.font-editorial {
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+}
+
+/* ============================================
+   Echo Stack Component
+   ============================================ */
+
+.echo-stack {
+  position: relative;
+  display: inline-block;
+}
+
+.echo-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.echo-layer-1 {
+  transform: translate(-0.04em, -0.04em);
+  color: #bfbfbf;
+}
+
+.echo-layer-2 {
+  transform: translate(-0.08em, -0.08em);
+  color: #c9c9c9;
+}
+
+.echo-layer-3 {
+  transform: translate(-0.12em, -0.12em);
+  color: #d1d1d1;
+}
+
+.echo-layer-4 {
+  transform: translate(-0.16em, -0.16em);
+  color: #d9d9d9;
+}
+
+/* ============================================
+   Clip-Path Image Reveal Animation
+   ============================================ */
+
+.clip-reveal {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 700ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.clip-reveal.revealed {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ============================================
+   Grayscale → Color Hover
+   ============================================ */
+
+.grayscale-hover {
+  filter: grayscale(80%);
+  transition: filter 500ms cubic-bezier(0.77, 0, 0.175, 1),
+              transform 500ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.grayscale-hover:hover {
+  filter: grayscale(0%);
+  transform: scale(1.05);
+}
+
+/* ============================================
+   Pill-Shaped Showcase Component
+   ============================================ */
+
+.pill-showcase {
+  height: 500px;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.pill-showcase img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.pill-showcase:hover img {
+  transform: scale(1.08);
+}
+
+.pill-showcase .pill-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 500ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.pill-showcase:hover .pill-overlay {
+  opacity: 1;
+}
+
+/* ============================================
+   Service Card Hover
+   ============================================ */
+
+.service-card {
+  border: 1px solid rgba(30, 30, 30, 0.1);
+  background: transparent;
+  transition: background 400ms ease, border-color 400ms ease;
+}
+
+.service-card:hover {
+  background: #ffffff;
+  border-color: rgba(30, 30, 30, 0.2);
+}
+
+.service-card .icon-container {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(30, 30, 30, 0.15);
+  transition: transform 400ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.service-card:hover .icon-container {
+  transform: rotate(12deg);
+}
+
+/* ============================================
+   Hairline Divider
+   ============================================ */
+
+.hairline-v {
+  width: 1px;
+  height: 80px;
+  background: rgba(30, 30, 30, 0.1);
+  margin: 0 auto;
+}
+
+/* ============================================
+   Apple-Style Scroll Reveal Animations
+   ============================================ */
+
+/* Base state — all reveal elements start hidden */
+.reveal {
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Fade Up (Apple's most common effect) */
+.reveal.fade-up {
+  transform: translateY(60px);
+}
+
+.reveal.fade-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade Down */
+.reveal.fade-down {
+  transform: translateY(-60px);
+}
+
+.reveal.fade-down.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade Left */
+.reveal.fade-left {
+  transform: translateX(-80px);
+}
+
+.reveal.fade-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Fade Right */
+.reveal.fade-right {
+  transform: translateX(80px);
+}
+
+.reveal.fade-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale In (zoom from small) */
+.reveal.scale-in {
+  transform: scale(0.85);
+}
+
+.reveal.scale-in.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Blur In (Apple's signature blur-to-clear effect) */
+.reveal.blur-in {
+  filter: blur(12px);
+  transform: translateY(30px);
+}
+
+.reveal.blur-in.revealed {
+  opacity: 1;
+  filter: blur(0px);
+  transform: translateY(0);
+}
+
+/* Scale + Blur combo */
+.reveal.scale-blur {
+  filter: blur(8px);
+  transform: scale(0.9) translateY(20px);
+}
+
+.reveal.scale-blur.revealed {
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1) translateY(0);
+}
+
+/* Subtle float (very minimal, for already-visible refinement) */
+.reveal.float-up {
+  transform: translateY(24px);
+}
+
+.reveal.float-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Clip reveal animation */
+.reveal.clip-up {
+  clip-path: inset(100% 0 0 0);
+  opacity: 1;
+}
+
+.reveal.clip-up.revealed {
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+}
+
+/* Speed modifiers */
+.reveal.fast {
+  transition-duration: 0.5s;
+}
+
+.reveal.slow {
+  transition-duration: 1.2s;
+}
+
+.reveal.extra-slow {
+  transition-duration: 1.6s;
+}
+
+/* Delay modifiers (for manual stagger without JS) */
+.reveal.delay-100 {
+  transition-delay: 0.1s;
+}
+
+.reveal.delay-200 {
+  transition-delay: 0.2s;
+}
+
+.reveal.delay-300 {
+  transition-delay: 0.3s;
+}
+
+.reveal.delay-400 {
+  transition-delay: 0.4s;
+}
+
+.reveal.delay-500 {
+  transition-delay: 0.5s;
+}
+
+.reveal.delay-600 {
+  transition-delay: 0.6s;
+}
+
+.reveal.delay-700 {
+  transition-delay: 0.7s;
+}
+
+/* Reduced motion: respect accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* ============================================
+   Noise Overlay
+   ============================================ */
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ============================================
+   Marquee Animation
+   ============================================ */
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}

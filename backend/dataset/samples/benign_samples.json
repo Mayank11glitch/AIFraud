@@ -1,0 +1,208 @@
+[
+    {
+        "id": "benign_001",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Hey mom, just wanted to let you know I reached Mumbai safely. Will call you tonight.",
+        "language": "en",
+        "keywords": [
+            "reached Mumbai",
+            "reached safely",
+            "Will call you"
+        ]
+    },
+    {
+        "id": "benign_002",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Reminder: Your dentist appointment is scheduled for tomorrow at 3 PM. Please arrive 15 minutes early.",
+        "language": "en",
+        "keywords": [
+            "appointment is scheduled",
+            "dentist",
+            "Reminder:"
+        ]
+    },
+    {
+        "id": "benign_003",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Your order #1234 from Zomato has been delivered! Rate your meal and share feedback in the app.",
+        "language": "en",
+        "keywords": [
+            "order #",
+            "has been delivered",
+            "Zomato"
+        ]
+    },
+    {
+        "id": "benign_004",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Monthly salary credited: Rs.45,000 on 01-Mar-2026 to your HDFC account ending 4521. Available balance: Rs.1,23,456.",
+        "language": "en",
+        "keywords": [
+            "salary credited",
+            "Available balance",
+            "ending 4521"
+        ]
+    },
+    {
+        "id": "benign_005",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 2,
+        "text": "Swiggy: Flat 40% OFF on your next order! Use code TASTY40. Valid till Sunday. Order now on the app.",
+        "language": "en"
+    },
+    {
+        "id": "benign_006",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Dear Student, your semester exam results are available on the university portal. Login to check your grades.",
+        "language": "en"
+    },
+    {
+        "id": "benign_007",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Kya haal hai bhai? Cricket match dekhne chalein kya aaj shaam? IPL final hai Wankhede mein.",
+        "language": "hi"
+    },
+    {
+        "id": "benign_008",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Your IRCTC ticket PNR 2345678901 is confirmed. Train: Rajdhani Express, Coach B3, Seat 42.",
+        "language": "en"
+    },
+    {
+        "id": "benign_009",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "OTP for your Flipkart login is 847291. Valid for 10 minutes. Do not share this OTP with anyone.",
+        "language": "en"
+    },
+    {
+        "id": "benign_010",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Happy Birthday Priya! Wishing you a wonderful year ahead. Let's catch up over chai this weekend.",
+        "language": "en"
+    },
+    {
+        "id": "benign_011",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "EPFO: Your PF monthly contribution of Rs.1,800 has been credited for Feb 2026. Total balance: Rs.3,45,678.",
+        "language": "en"
+    },
+    {
+        "id": "benign_012",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Team meeting scheduled for Monday at 10 AM IST via Google Meet. Please review the sprint backlog before joining.",
+        "language": "en"
+    },
+    {
+        "id": "benign_013",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "Electricity bill for March: Rs.2,340. Due date: 15-Mar-2026. Pay via Paytm, PhonePe, or net banking.",
+        "language": "en",
+        "keywords": [
+            "Electricity bill",
+            "Due date",
+            "bill for March"
+        ]
+    },
+    {
+        "id": "benign_014",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 1,
+        "text": "Amazon: Your package for 'Laptop Stand' has been shipped and will arrive by March 12.",
+        "language": "en"
+    },
+    {
+        "id": "benign_015",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "url": "https://www.sbi.co.in",
+        "text": "Official SBI website",
+        "language": "en"
+    },
+    {
+        "id": "benign_016",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "url": "https://www.incometax.gov.in",
+        "text": "Official Income Tax e-Filing Portal",
+        "language": "en"
+    },
+    {
+        "id": "benign_017",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "url": "https://www.irctc.co.in",
+        "text": "Official IRCTC Railway Booking Portal",
+        "language": "en"
+    },
+    {
+        "id": "benign_018",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "url": "https://www.amazon.in",
+        "text": "Official Amazon India",
+        "language": "en"
+    },
+    {
+        "id": "benign_019",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "url": "https://www.flipkart.com",
+        "text": "Official Flipkart",
+        "language": "en"
+    },
+    {
+        "id": "benign_020",
+        "category": "benign",
+        "label": "safe",
+        "risk_score": 0,
+        "url": "https://www.npci.org.in",
+        "text": "Official NPCI (UPI governing body)",
+        "language": "en"
+    },
+    {
+        "id": "benign_021",
+        "category": "banking",
+        "label": "safe",
+        "risk_score": 0,
+        "text": "A/c X1234 debited by Rs. 500 for UPI payment to Merchant on 10-Mar-26. RRN: 123456789 if not you, call 1800-BANK-NO.",
+        "language": "en",
+        "keywords": [
+            "debited by",
+            "UPI payment to",
+            "RRN:",
+            "if not you, call",
+            "A/c X"
+        ]
+    }
+]
