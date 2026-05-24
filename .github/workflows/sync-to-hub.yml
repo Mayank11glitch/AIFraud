@@ -32,7 +32,21 @@ jobs:
           cp $GITHUB_WORKSPACE/Dockerfile /tmp/hf_space/
           cp -r $GITHUB_WORKSPACE/backend /tmp/hf_space/
           
-          # 5. Commit and push to Hugging Face
+          # 5. Generate the required Hugging Face Space configuration README
+          cat <<'EOF' > /tmp/hf_space/README.md
+---
+title: ScamDetect Backend
+emoji: 🕵️
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
+
+Backend for ScamDetect AI
+EOF
+          
+          # 6. Commit and push to Hugging Face
           git add .
-          git commit -m "Auto-sync backend from GitHub" || echo "No changes to commit"
+          git commit -m "Auto-sync backend and fix configuration" || echo "No changes to commit"
           git push origin main
