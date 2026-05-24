@@ -13,8 +13,9 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - name: Push to hub
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          git push --force https://Mayank11207:$HF_TOKEN@huggingface.co/spaces/Mayank11207/scamdetect-backend main
+      - name: Sync to Hugging Face space
+        uses: huggingface/spaces-github-action@main
+        with:
+          space_domain: Mayank11207/scamdetect-backend
+          space_token: ${{ secrets.HF_TOKEN }}
+          create_space: false
