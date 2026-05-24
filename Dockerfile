@@ -5,7 +5,7 @@ FROM python:3.12-slim
 RUN apt-get update && apt-get install -y \
     build-essential \
     libglib2.0-0 \
-    libgl1-mesa-glx \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Hugging Face Spaces strictly requires applications to run as a non-root user (UID 1000)
