@@ -13,9 +13,13 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - name: Sync to Hugging Face space
-        uses: huggingface/spaces-github-action@main
-        with:
-          space_domain: Mayank11207/scamdetect-backend
-          space_token: ${{ secrets.HF_TOKEN }}
-          create_space: false
+      - name: Push to hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global user.email "bot@scamdetect.ai"
+          git config --global user.name "ScamDetect Bot"
+          git remote add space https://Mayank11207:$HF_TOKEN@huggingface.co/spaces/Mayank11207/scamdetect-backend
+          git fetch space main
+          git merge space/main --allow-unrelated-histories -m "Merge HF Space README"
+          git push space main
