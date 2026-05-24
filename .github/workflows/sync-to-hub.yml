@@ -17,9 +17,22 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          # 1. Configure git
           git config --global user.email "bot@scamdetect.ai"
           git config --global user.name "ScamDetect Bot"
-          git remote add space https://Mayank11207:$HF_TOKEN@huggingface.co/spaces/Mayank11207/scamdetect-backend
-          git fetch space main
-          git merge space/main --allow-unrelated-histories -m "Merge HF Space README"
-          git push space main
+          
+          # 2. Clone the Hugging Face space into a temporary directory
+          git clone https://Mayank11207:$HF_TOKEN@huggingface.co/spaces/Mayank11207/scamdetect-backend /tmp/hf_space
+          
+          # 3. Remove all old files in the Hugging Face space (except .git)
+          cd /tmp/hf_space
+          find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
+          
+          # 4. Copy ONLY the Dockerfile and backend folder from GitHub
+          cp $GITHUB_WORKSPACE/Dockerfile /tmp/hf_space/
+          cp -r $GITHUB_WORKSPACE/backend /tmp/hf_space/
+          
+          # 5. Commit and push to Hugging Face
+          git add .
+          git commit -m "Auto-sync backend from GitHub" || echo "No changes to commit"
+          git push origin main
