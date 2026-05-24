@@ -227,18 +227,19 @@ def ensemble_analyze_text(text: str, finetuned_classifier, nlp_classifier, ds) -
     
     # 2. Zero-shot model prediction
     zs_risk = 0.0
+    scores_zs_out = {}
     if _nlp_clf():
         try:
             result_zs = _nlp_clf()(text, CANDIDATE_LABELS, multi_label=True)
-            scores_zs = dict(zip(result_zs['labels'], result_zs['scores']))
+            scores_zs_out = dict(zip(result_zs['labels'], result_zs['scores']))
             
             malicious_scores = [
-                scores_zs.get("phishing", 0), 
-                scores_zs.get("financial scam", 0), 
-                scores_zs.get("threat or blackmail", 0),
-                scores_zs.get("identity theft", 0)
+                scores_zs_out.get("phishing", 0), 
+                scores_zs_out.get("financial scam", 0), 
+                scores_zs_out.get("threat or blackmail", 0),
+                scores_zs_out.get("identity theft", 0)
             ]
-            legit_score = scores_zs.get("legitimate communication", 0)
+            legit_score = scores_zs_out.get("legitimate communication", 0)
             max_malicious = max(malicious_scores) if malicious_scores else 0
             zs_risk = max_malicious
             scores["zeroshot"] = zs_risk
@@ -269,7 +270,7 @@ def ensemble_analyze_text(text: str, finetuned_classifier, nlp_classifier, ds) -
         weights["keyword"] * scores.get("keyword", 0)
     )
     
-    return ensemble_risk * 100, list(set(categories)), scores
+    return ensemble_risk * 100, list(set(categories)), scores, scores_zs_out
 
 # Explainability Vocabularies (English + Hindi)
 XAI_VOCAB = {
@@ -332,13 +333,10 @@ def analyze_text_with_nlp(text: str):
     
     try:
         # Use ensemble approach for better accuracy
-        ensemble_risk, ensemble_cats, component_scores = ensemble_analyze_text(
+        ensemble_risk, ensemble_cats, component_scores, scores_zs = ensemble_analyze_text(
             text, _finetuned(), _nlp_clf(), ds
         )
-        
-        # Get zero-shot scores for XAI explanations
-        result_zs = _nlp_clf()(text, CANDIDATE_LABELS, multi_label=True)
-        scores_zs = dict(zip(result_zs['labels'], result_zs['scores']))
+
         
         # Apply adjustments
         final_risk = ensemble_risk

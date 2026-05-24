@@ -24,13 +24,20 @@ jobs:
           # 2. Clone the Hugging Face space into a temporary directory
           git clone https://Mayank11207:$HF_TOKEN@huggingface.co/spaces/Mayank11207/scamdetect-backend /tmp/hf_space
           
-          # 3. Remove all old files in the Hugging Face space (except .git)
+          # 3. Preserve the models folder so manual uploads aren't deleted!
           cd /tmp/hf_space
+          mv backend/models /tmp/preserved_models || echo "No models to preserve"
+          
+          # Remove all other old files (except .git)
           find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
           
           # 4. Copy ONLY the Dockerfile and backend folder from GitHub
           cp $GITHUB_WORKSPACE/Dockerfile /tmp/hf_space/
           cp -r $GITHUB_WORKSPACE/backend /tmp/hf_space/
+          
+          # Restore the preserved models
+          mkdir -p /tmp/hf_space/backend/models
+          cp -r /tmp/preserved_models/* /tmp/hf_space/backend/models/ 2>/dev/null || echo "No models to restore"
           
           # 5. Generate the required Hugging Face Space configuration README
           echo "---" > /tmp/hf_space/README.md
