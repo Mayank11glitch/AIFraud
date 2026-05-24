@@ -8,7 +8,7 @@ import { isNative } from './platform';
 // On native platforms or in production builds (Vercel), point to the deployed backend.
 // In local development, use localhost fallback.
 const API_BASE = import.meta.env.VITE_API_URL || 
-  (import.meta.env.PROD || isNative ? 'https://aifraud.onrender.com' : 'http://localhost:8000');
+  (import.meta.env.PROD || isNative ? 'https://mayank11207-scamdetect-backend.hf.space' : 'http://localhost:8000');
 
 // Derive WebSocket URL from the HTTP URL
 const WS_BASE = import.meta.env.VITE_WS_URL || 
