@@ -28,8 +28,8 @@ jobs:
           cd /tmp/hf_space
           mv backend/models /tmp/preserved_models || echo "No models to preserve"
           
-          # Remove all other old files (except .git)
-          find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
+          # Remove all other old files (except .git and .gitattributes)
+          find . -maxdepth 1 ! -name '.git' ! -name '.gitattributes' ! -name '.' -exec rm -rf {} +
           
           # 4. Copy ONLY the Dockerfile and backend folder from GitHub
           cp $GITHUB_WORKSPACE/Dockerfile /tmp/hf_space/
