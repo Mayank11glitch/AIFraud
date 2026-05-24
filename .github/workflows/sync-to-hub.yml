@@ -33,18 +33,16 @@ jobs:
           cp -r $GITHUB_WORKSPACE/backend /tmp/hf_space/
           
           # 5. Generate the required Hugging Face Space configuration README
-          cat <<'EOF' > /tmp/hf_space/README.md
----
-title: ScamDetect Backend
-emoji: 🕵️
-colorFrom: blue
-colorTo: indigo
-sdk: docker
-pinned: false
----
-
-Backend for ScamDetect AI
-EOF
+          echo "---" > /tmp/hf_space/README.md
+          echo "title: ScamDetect Backend" >> /tmp/hf_space/README.md
+          echo "emoji: 🕵️" >> /tmp/hf_space/README.md
+          echo "colorFrom: blue" >> /tmp/hf_space/README.md
+          echo "colorTo: indigo" >> /tmp/hf_space/README.md
+          echo "sdk: docker" >> /tmp/hf_space/README.md
+          echo "pinned: false" >> /tmp/hf_space/README.md
+          echo "---" >> /tmp/hf_space/README.md
+          echo "" >> /tmp/hf_space/README.md
+          echo "Backend for ScamDetect AI" >> /tmp/hf_space/README.md
           
           # 6. Commit and push to Hugging Face
           git add .
