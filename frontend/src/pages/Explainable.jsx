@@ -68,7 +68,7 @@ const Explainable = () => {
                 Level: {scanResult.risk_level}
               </div>
               <div className="font-mono text-[10px] uppercase text-[#838282] font-bold tracking-widest">
-                Engine Confidence: >98%
+                Engine Confidence: &gt;98%
               </div>
             </div>
             <h3 className="font-display text-2xl font-bold leading-tight tracking-[-0.03em] text-[#111111] mt-2">
