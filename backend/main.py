@@ -12,7 +12,7 @@ from database import engine, Base
 import models.db_models
 
 # Create the database tables if they don't exist
-# Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="ScamDetect AI API", version="1.0.0")
 
