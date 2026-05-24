@@ -18,7 +18,13 @@ app = FastAPI(title="ScamDetect AI API", version="1.0.0")
 
 # Set up CORS for React frontend
 # Add production frontend URLs via ALLOWED_ORIGINS env var (comma-separated)
-default_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+default_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://localhost",          # Capacitor Android WebView
+    "capacitor://localhost",      # Capacitor iOS WebView
+    "http://localhost",           # Capacitor fallback
+]
 extra_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
 allowed_origins = default_origins + [o.strip() for o in extra_origins if o.strip()]
 

@@ -2,12 +2,38 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useScrollReveal, { useStaggerReveal } from '../hooks/useScrollReveal';
 import { API_BASE } from '../config/api';
+import { isNative } from '../config/platform';
+
+// Conditionally import Capacitor plugins
+let Camera, CameraResultType, CameraSource, Haptics, ImpactStyle;
+if (isNative) {
+  import('@capacitor/camera').then((mod) => {
+    Camera = mod.Camera;
+    CameraResultType = mod.CameraResultType;
+    CameraSource = mod.CameraSource;
+  });
+  import('@capacitor/haptics').then((mod) => {
+    Haptics = mod.Haptics;
+    ImpactStyle = mod.ImpactStyle;
+  });
+}
 
 const redactPII = (text) => {
   if (!text) return text;
   let redacted = text.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[REDACTED_EMAIL]');
   redacted = redacted.replace(/(?:\+\d{1,3}[\s-]?)?(?:\(?\d{2,4}\)?[\s-]?)?\d{3,4}[\s-]?\d{4}/g, '[REDACTED_PHONE]');
   return redacted;
+};
+
+// Helper: Convert base64 data URL to a File object
+const base64ToFile = (base64Data, filename, mimeType) => {
+  const byteString = atob(base64Data);
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new File([ab], filename, { type: mimeType });
 };
 
 const Scanner = () => {
@@ -21,6 +47,27 @@ const Scanner = () => {
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  // Native camera picker (Capacitor)
+  const handleNativeCapture = async () => {
+    if (!Camera) return;
+    try {
+      const photo = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Prompt, // Let user choose camera or gallery
+      });
+      const file = base64ToFile(
+        photo.base64String,
+        `capture_${Date.now()}.${photo.format}`,
+        `image/${photo.format}`
+      );
+      setSelectedFile(file);
+    } catch (err) {
+      console.log('Camera cancelled or errored:', err);
     }
   };
 
@@ -58,9 +105,16 @@ const Scanner = () => {
 
       if (response.ok) {
         const data = await response.json();
+        // Haptic feedback on native when scan completes
+        if (isNative && Haptics) {
+          Haptics.impact({ style: ImpactStyle.Medium });
+        }
         navigate('/analysis', { state: { scanResult: data, originalInput: inputValue } });
       } else {
         console.error('Scan failed:', await response.text());
+        if (isNative && Haptics) {
+          Haptics.notification({ type: 'ERROR' });
+        }
         alert('Scan failed. Please check the console for details.');
       }
     } catch (error) {
@@ -126,21 +180,21 @@ const Scanner = () => {
           {/* Input Area */}
           <div className="p-8 md:p-12">
             {(activeTab === 'image' || activeTab === 'video') ? (
-              <label className="flex flex-col items-center justify-center gap-6 border-[1px] border-dashed border-[#444444] bg-[#151515] hover:bg-[#222222] transition-colors px-6 py-24 cursor-pointer group">
+              <label className="flex flex-col items-center justify-center gap-6 border-[1px] border-dashed border-[#444444] bg-[#151515] hover:bg-[#222222] transition-colors px-6 py-24 cursor-pointer group" onClick={isNative && activeTab === 'image' ? (e) => { e.preventDefault(); handleNativeCapture(); } : undefined}>
                 <input type="file" className="hidden" onChange={handleFileChange} accept={activeTab === 'image' ? "image/*" : "video/*"} />
                 <div className="w-16 h-16 bg-[#2a2a2a] border border-[#444444] flex items-center justify-center text-[#f2f2f2] group-hover:-translate-y-1 transition-transform duration-300">
-                  <span className="material-symbols-outlined text-[24px]">cloud_upload</span>
+                  <span className="material-symbols-outlined text-[24px]">{isNative ? 'photo_camera' : 'cloud_upload'}</span>
                 </div>
                 <div className="flex max-w-[480px] flex-col items-center gap-3">
                   <p className="font-display text-[#f2f2f2] text-2xl font-semibold tracking-[-0.02em] text-center">
-                    {selectedFile ? selectedFile.name : "Drag & Drop file here"}
+                    {selectedFile ? selectedFile.name : (isNative ? "Tap to capture or select" : "Drag & Drop file here")}
                   </p>
                   <p className="font-body text-[#b6b5b5] text-sm font-normal text-center">
                     {activeTab === 'image' ? "Supports JPG, PNG, GIF up to 10MB" : "Supports MP4, MOV up to 50MB"}
                   </p>
                 </div>
                 <div className="mt-4 px-8 py-3 bg-[#f2f2f2] border border-[#f2f2f2] text-[#111111] font-body text-[11px] font-bold uppercase tracking-[0.1em] hover:bg-transparent hover:text-[#f2f2f2] transition-colors">
-                  Browse Files
+                  {isNative ? 'Take Photo / Gallery' : 'Browse Files'}
                 </div>
               </label>
             ) : (

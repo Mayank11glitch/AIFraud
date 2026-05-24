@@ -3,21 +3,36 @@ import datetime
 import os
 import tempfile
 import functools
-import torch
 import urllib.parse
 from models.schemas import ScanningResult, FeatureExplanation
 
-# Import ML dependencies
-from transformers import pipeline, CLIPProcessor, CLIPModel
+# =====================================================
+# DEFERRED HEAVY IMPORTS — torch/transformers load lazily
+# to prevent Render port-scan timeout on cold start.
+# =====================================================
+_torch = None
+_transformers = None
+_GPU_MGR = None
+_DEVICE = None
+
+def _ensure_ml_loaded():
+    """Load torch, transformers, and GPU manager on first use."""
+    global _torch, _transformers, _GPU_MGR, _DEVICE
+    if _torch is not None:
+        return
+    print("[Lazy] Loading ML dependencies (torch, transformers)...")
+    import torch as _t
+    _torch = _t
+    import transformers as _tf
+    _transformers = _tf
+    from services.gpu_manager import GPU_MGR as gm, DEVICE as dev
+    _GPU_MGR = gm
+    _DEVICE = dev
+    _GPU_MGR.print_status()
+    print("[Lazy] ML dependencies loaded.")
 
 # Import Indian Scam Dataset for enhanced scoring
 from dataset.loader import get_dataset
-
-# Import GPU Manager for multi-platform support
-from services.gpu_manager import GPU_MGR, DEVICE
-
-# Print GPU Status
-GPU_MGR.print_status()
 
 # =====================================================
 # LAZY MODEL LOADING — models load on first use, not at startup.
@@ -30,6 +45,9 @@ def _get_model(name):
     if name in _models:
         return _models[name]
 
+    # Ensure torch/transformers are loaded before any model loading
+    _ensure_ml_loaded()
+
     try:
         if name == "finetuned_classifier":
             model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "scamdetect-finetuned")
@@ -38,10 +56,10 @@ def _get_model(name):
                 _models[name] = None
                 return None
             print("Loading Fine-Tuned Custom Scam Classifier...")
-            _models[name] = pipeline(
+            _models[name] = _transformers.pipeline(
                 "text-classification",
                 model=model_path,
-                device=GPU_MGR.get_device_index(),
+                device=_GPU_MGR.get_device_index(),
                 top_k=None
             )
             print("Fine-Tuned Custom Model loaded successfully.")
@@ -53,31 +71,32 @@ def _get_model(name):
                 _models[name] = None
                 return None
             print("Loading Fine-Tuned URL Classifier...")
-            _models[name] = pipeline(
+            _models[name] = _transformers.pipeline(
                 "text-classification",
                 model=model_path,
-                device=GPU_MGR.get_device_index()
+                device=_GPU_MGR.get_device_index()
             )
             print("Fine-Tuned URL Model loaded successfully.")
 
         elif name == "nlp_classifier":
             print("Loading Multilingual mDeBERTa-v3 classification pipeline...")
             try:
-                _models[name] = pipeline(
+                _models[name] = _transformers.pipeline(
                     "zero-shot-classification",
                     model="MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7",
-                    device=GPU_MGR.get_device_index()
+                    device=_GPU_MGR.get_device_index()
                 )
                 print("Multilingual mDeBERTa-v3 loaded successfully.")
             except Exception:
                 print("Falling back to BART-large-MNLI...")
-                _models[name] = pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=GPU_MGR.get_device_index())
+                _models[name] = _transformers.pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=_GPU_MGR.get_device_index())
 
         elif name == "clip_model":
             print("Loading CLIP visual classification model...")
-            _models["clip_model"] = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(GPU_MGR.get_device())
+            from transformers import CLIPProcessor, CLIPModel
+            _models["clip_model"] = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(_GPU_MGR.get_device())
             _models["clip_processor"] = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-            print(f"CLIP model loaded successfully (on {DEVICE.upper()}).")
+            print(f"CLIP model loaded successfully (on {_DEVICE.upper()}).")
 
         elif name == "clip_processor":
             # Loading clip_model also loads clip_processor
@@ -87,17 +106,17 @@ def _get_model(name):
         elif name == "whisper_model":
             import whisper
             print("Loading Whisper 'tiny' model...")
-            whisper_device = "cuda" if DEVICE == "cuda" else ("mps" if DEVICE == "mps" else "cpu")
+            whisper_device = "cuda" if _DEVICE == "cuda" else ("mps" if _DEVICE == "mps" else "cpu")
             _models[name] = whisper.load_model("tiny", device=whisper_device)
-            print(f"Whisper model loaded successfully (on {DEVICE.upper()}).")
+            print(f"Whisper model loaded successfully (on {_DEVICE.upper()}).")
 
         elif name == "deepfake_model":
             print("Loading Deepfake Detection model...")
             from transformers import AutoImageProcessor, AutoModelForImageClassification
             _models["deepfake_processor"] = AutoImageProcessor.from_pretrained("hamzenium/ViT-Deepfake-Classifier")
-            _models["deepfake_model"] = AutoModelForImageClassification.from_pretrained("hamzenium/ViT-Deepfake-Classifier").to(GPU_MGR.get_device())
+            _models["deepfake_model"] = AutoModelForImageClassification.from_pretrained("hamzenium/ViT-Deepfake-Classifier").to(_GPU_MGR.get_device())
             _models["deepfake_model"].eval()
-            print(f"Deepfake detector loaded successfully (on {DEVICE.upper()}).")
+            print(f"Deepfake detector loaded successfully (on {_DEVICE.upper()}).")
 
         elif name == "deepfake_processor":
             _get_model("deepfake_model")
@@ -420,9 +439,9 @@ def classify_image_with_clip(pil_image):
         )
         
         # Move inputs to GPU if available
-        inputs = {k: v.to(GPU_MGR.get_device()) if isinstance(v, torch.Tensor) else v for k, v in inputs.items()}
+        inputs = {k: v.to(_GPU_MGR.get_device()) if isinstance(v, _torch.Tensor) else v for k, v in inputs.items()}
         
-        with torch.no_grad():
+        with _torch.no_grad():
             outputs = _clip_m()(**inputs)
             logits = outputs.logits_per_image[0]
             probs = logits.softmax(dim=0).tolist()
@@ -478,15 +497,15 @@ def detect_deepfake_faces(pil_image):
     
     try:
         inputs = _deepfake_p()(images=pil_image, return_tensors="pt")
-        inputs = {k: v.to(GPU_MGR.get_device()) if isinstance(v, torch.Tensor) else v for k, v in inputs.items()}
+        inputs = {k: v.to(_GPU_MGR.get_device()) if isinstance(v, _torch.Tensor) else v for k, v in inputs.items()}
         
-        with torch.no_grad():
+        with _torch.no_grad():
             outputs = _deepfake_m()(**inputs)
             logits = outputs.logits
-            probs = torch.softmax(logits, dim=1)[0]
+            probs = _torch.softmax(logits, dim=1)[0]
         
         # Get prediction
-        predicted_class = torch.argmax(probs, dim=0).item()
+        predicted_class = _torch.argmax(probs, dim=0).item()
         confidence = probs[predicted_class].item()
         
         # Check model labels

@@ -14,9 +14,10 @@ const Header = () => {
 
   return (
     <header
-      className="sticky top-0 z-50 flex items-center justify-between px-6 lg:px-12 bg-[#f2f2f2]"
+      className="safe-area-top sticky top-0 z-50 flex items-center justify-between px-6 lg:px-12 bg-[#f2f2f2]"
       style={{
-        height: '80px',
+        minHeight: '80px',
+        paddingTop: `calc(env(safe-area-inset-top, 0px) + 0px)`,
         borderBottom: '2px solid #111111',
       }}
     >
