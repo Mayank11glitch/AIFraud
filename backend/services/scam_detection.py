@@ -277,7 +277,9 @@ XAI_VOCAB = {
     "urgency": ["urgent", "immediately", "suspend", "block", "freeze", "24 hours", "action required", "turant", "jald", "warn", "last chance", "expire", "band", "block", "freeze"],
     "phishing": ["verify", "kyc", "update", "link", "click here", "login", "password", "otp", "pin", "pan card", "adhar", "aadhar", "account", "khata", "password", "verify"],
     "financial": ["payment", "transfer", "credited", "debited", "refund", "lottery", "prize", "cash", "rupees", "rs.", "inr", "upi", "paytm", "gpay", "phonepe", "paisa", "paise", "jeet", "lottery", "cashback"],
-    "threat": ["arrest", "police", "legal action", "fine", "penalty", "warrant", "court", "jail", "fir", "kanoon", "jurmana", "cbi", "tax"]
+    "threat": ["arrest", "police", "legal action", "fine", "penalty", "warrant", "court", "jail", "fir", "kanoon", "jurmana", "cbi", "tax"],
+    "authority": ["irs", "police", "bank", "manager", "admin", "support", "government", "sbi", "hdfc", "icici", "rbi", "official", "department", "customs", "officer"],
+    "reward": ["winner", "congratulations", "won", "prize", "gift", "free", "selected", "claim", "bonus", "reward", "offer", "discount", "lucky", "draw", "iphone", "car"]
 }
 
 def extract_matched_words(text: str, category: str, max_words=3) -> list:
@@ -285,6 +287,18 @@ def extract_matched_words(text: str, category: str, max_words=3) -> list:
     text_lower = text.lower()
     matches = [word for word in XAI_VOCAB.get(category, []) if word in text_lower]
     return matches[:max_words]
+
+def extract_evidence_sentence(text: str, category: str) -> str:
+    """Helper to extract the specific sentence containing matched trigger words"""
+    words = extract_matched_words(text, category, max_words=10)
+    if not words: return ""
+    import re
+    sentences = re.split(r'(?<=[.!?]) +|\n', text)
+    for s in sentences:
+        s_lower = s.lower()
+        if any(w in s_lower for w in words):
+            return s.strip()
+    return ""
 
 # --- Adversarial Defense Layer ---
 ADVERSARIAL_PATTERNS = [
@@ -359,7 +373,13 @@ def analyze_text_with_nlp(text: str):
             "Urgency": round(scores_zs.get("urgency", 0) * 100, 1),
             "Fear": round(scores_zs.get("threat or blackmail", 0) * 100, 1),
             "Authority": round(scores_zs.get("authority impersonation", 0) * 100, 1),
-            "Reward": round(scores_zs.get("promotional offer", 0) * 100, 1)
+            "Reward": round(scores_zs.get("promotional offer", 0) * 100, 1),
+            "Evidence": {
+                "Urgency": extract_evidence_sentence(text, "urgency"),
+                "Fear": extract_evidence_sentence(text, "threat"),
+                "Authority": extract_evidence_sentence(text, "authority"),
+                "Reward": extract_evidence_sentence(text, "reward")
+            }
         }
         
         # Risk level

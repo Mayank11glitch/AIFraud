@@ -62,6 +62,14 @@ const Behavioral = () => {
   const topTrait = sortedTraits[0][0];
   const topScore = sortedTraits[0][1];
 
+  const evidence = profile.Evidence || {};
+  const defaultQuotes = {
+    Urgency: "Your account will be suspended in 24 hours unless you verify...",
+    Fear: "We have detected illegal activity on your IP. Pay fine or face arrest.",
+    Authority: "This is the IRS. You owe back taxes. Please provide SSN.",
+    Reward: "Congratulations! You've been selected to receive a free gift card."
+  };
+
   if (loading) {
     return (
       <main className="flex flex-col gap-8 flex-1 py-16 px-6 lg:px-12 max-w-6xl mx-auto w-full">
@@ -182,13 +190,24 @@ const Behavioral = () => {
 
       {/* Detail Cards Section */}
       <section className="flex flex-col gap-8 mb-12">
-        <div className="flex flex-col gap-2">
-          <h2 className="font-display text-[#111111] text-3xl font-semibold tracking-[-0.03em] leading-tight">
-            Persuasion Categories Detailed
-          </h2>
-          <p className="font-body text-[#838282] text-base font-normal leading-relaxed max-w-2xl">
-            Understanding the specific psychological triggers used in potential scams.
-          </p>
+        <div className="flex flex-col gap-4">
+          <div>
+            <h2 className="font-display text-[#111111] text-3xl font-semibold tracking-[-0.03em] leading-tight mb-2">
+              Persuasion Categories Detailed
+            </h2>
+            <p className="font-body text-[#838282] text-base font-normal leading-relaxed max-w-2xl">
+              Understanding the specific psychological triggers used in potential scams.
+            </p>
+          </div>
+          
+          {latestScan?.raw_text_extracted && latestScan.raw_text_extracted !== "[No text detected]" && latestScan.raw_text_extracted !== "[Web content unreachable]" && (
+            <div className="bg-[#f9f9f9] border border-[rgba(30,30,30,0.08)] p-6 mt-4">
+              <h4 className="font-body text-[#111111] text-[11px] font-bold uppercase tracking-[0.1em] mb-2">Analyzed Text Source</h4>
+              <p className="font-editorial text-[#838282] text-sm italic leading-relaxed line-clamp-3">
+                "{latestScan.raw_text_extracted}"
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -210,7 +229,7 @@ const Behavioral = () => {
               <div className="bg-[#ffffff] p-4 border border-[rgba(30,30,30,0.08)] relative">
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#111111]"></div>
                 <p className="font-editorial text-[14px] text-[#838282] italic leading-relaxed">
-                  "Your account will be suspended in 24 hours unless you verify..."
+                  "{evidence.Urgency ? evidence.Urgency : defaultQuotes.Urgency}"
                 </p>
               </div>
             </div>
@@ -234,7 +253,7 @@ const Behavioral = () => {
               <div className="bg-[#ffffff] p-4 border border-[rgba(30,30,30,0.08)] relative">
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#111111]"></div>
                 <p className="font-editorial text-[14px] text-[#838282] italic leading-relaxed">
-                  "We have detected illegal activity on your IP. Pay fine or face arrest."
+                  "{evidence.Fear ? evidence.Fear : defaultQuotes.Fear}"
                 </p>
               </div>
             </div>
@@ -258,7 +277,7 @@ const Behavioral = () => {
               <div className="bg-[#ffffff] p-4 border border-[rgba(30,30,30,0.08)] relative">
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#111111]"></div>
                 <p className="font-editorial text-[14px] text-[#838282] italic leading-relaxed">
-                  "This is the IRS. You owe back taxes. Please provide SSN."
+                  "{evidence.Authority ? evidence.Authority : defaultQuotes.Authority}"
                 </p>
               </div>
             </div>
@@ -282,7 +301,7 @@ const Behavioral = () => {
               <div className="bg-[#ffffff] p-4 border border-[rgba(30,30,30,0.08)] relative">
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#111111]"></div>
                 <p className="font-editorial text-[14px] text-[#838282] italic leading-relaxed">
-                  "Congratulations! You've been selected to receive a free gift card."
+                  "{evidence.Reward ? evidence.Reward : defaultQuotes.Reward}"
                 </p>
               </div>
             </div>
