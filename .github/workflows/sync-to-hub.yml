@@ -21,8 +21,11 @@ jobs:
           git config --global user.email "bot@scamdetect.ai"
           git config --global user.name "ScamDetect Bot"
           
-          # 2. Clone the Hugging Face space into a temporary directory
-          git clone https://Mayank11207:$HF_TOKEN@huggingface.co/spaces/Mayank11207/scamdetect-backend /tmp/hf_space
+          # 2. Clone the Hugging Face space into a temporary directory (with retry logic for 429 errors)
+          for i in {1..3}; do
+            git clone https://Mayank11207:$HF_TOKEN@huggingface.co/spaces/Mayank11207/scamdetect-backend /tmp/hf_space && break || echo "Clone failed, retrying in 30s..."
+            sleep 30
+          done
           
           # 3. Preserve the models folder so manual uploads aren't deleted!
           cd /tmp/hf_space
