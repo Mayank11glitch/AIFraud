@@ -23,6 +23,9 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Optional[str] = None
 
+class GoogleToken(BaseModel):
+    token: str
+
 class FeatureExplanation(BaseModel):
     feature: str
     description: str

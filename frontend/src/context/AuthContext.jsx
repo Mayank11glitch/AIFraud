@@ -76,12 +76,34 @@ export const AuthProvider = ({ children }) => {
     return false;
   };
 
+  const loginWithGoogle = async (credential) => {
+    try {
+      const response = await fetch(`${API_BASE}/api/auth/google`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: credential })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setToken(data.access_token);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Google login error:", error);
+      return false;
+    }
+  };
+
   const logout = () => {
     setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, loginWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   );

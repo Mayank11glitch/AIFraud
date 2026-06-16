@@ -9,14 +9,18 @@ import Behavioral from './pages/Behavioral';
 import { NotificationProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'react-hot-toast';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
+
   return (
-    <Router>
-      <AuthProvider>
-        <NotificationProvider>
+    <GoogleOAuthProvider clientId={clientId}>
+      <Router>
+        <AuthProvider>
+          <NotificationProvider>
           <div className="relative flex min-h-screen flex-col group/design-root overflow-x-hidden w-full">
             <Header />
             <Routes>
@@ -37,6 +41,7 @@ function App() {
         </NotificationProvider>
       </AuthProvider>
     </Router>
+    </GoogleOAuthProvider>
   );
 }
 

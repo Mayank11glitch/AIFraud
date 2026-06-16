@@ -10,9 +10,12 @@ from database import get_db
 import models.db_models as db_models
 import models.schemas as schemas
 import os
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 # Configuration
 SECRET_KEY = os.getenv("JWT_SECRET_KEY", "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "YOUR_GOOGLE_CLIENT_ID")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7 # 1 week
 
@@ -99,3 +102,58 @@ def read_users_me(current_user: db_models.User = Depends(get_current_user)):
     if not current_user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     return current_user
+
+@router.post("/google", response_model=schemas.Token)
+def google_auth(google_token: schemas.GoogleToken, db: Session = Depends(get_db)):
+    try:
+        # Verify the Google token
+        idinfo = id_token.verify_oauth2_token(
+            google_token.token, 
+            requests.Request(), 
+            GOOGLE_CLIENT_ID,
+            clock_skew_in_seconds=10
+        )
+        
+        email = idinfo['email']
+        name = idinfo.get('name', email.split('@')[0])
+        
+        # Check if user exists
+        user = db.query(db_models.User).filter(db_models.User.email == email).first()
+        
+        if not user:
+            # Create a new user if they don't exist
+            # Generate a random password since they use Google to login
+            import secrets
+            random_password = secrets.token_urlsafe(32)
+            hashed_password = get_password_hash(random_password)
+            
+            # Ensure username is unique
+            base_username = name.lower().replace(" ", "")
+            username = base_username
+            counter = 1
+            while db.query(db_models.User).filter(db_models.User.username == username).first():
+                username = f"{base_username}{counter}"
+                counter += 1
+                
+            user = db_models.User(
+                username=username,
+                email=email,
+                hashed_password=hashed_password
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+            
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user.username}, expires_delta=access_token_expires
+        )
+        return {"access_token": access_token, "token_type": "bearer"}
+        
+    except ValueError as e:
+        # Invalid token
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid Google token: {str(e)}",
+            headers={"WWW-Authenticate": "Bearer"},
+        )

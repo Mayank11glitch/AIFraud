@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Header = () => {
   const location = useLocation();
-  const { user, login, register, logout } = useContext(AuthContext);
+  const { user, login, register, logout, loginWithGoogle } = useContext(AuthContext);
   
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isLoginTab, setIsLoginTab] = useState(true);
@@ -43,6 +44,15 @@ const Header = () => {
       setUsername('');
       setEmail('');
       setPassword('');
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    const success = await loginWithGoogle(credentialResponse.credential);
+    if (success) {
+      setShowAuthModal(false);
+    } else {
+      setError('Google Sign-In failed on the server.');
     }
   };
 
@@ -221,6 +231,23 @@ const Header = () => {
                 {isLoginTab ? 'Execute Login' : 'Initialize Account'}
               </button>
             </form>
+
+            <div className="mt-6 flex items-center justify-center">
+              <span className="text-xs font-bold uppercase tracking-wider font-body text-[#838282] bg-[#f2f2f2] px-2 relative z-10">OR</span>
+              <div className="absolute left-8 right-8 h-[2px] bg-[#111111]/10 mt-[1px]"></div>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => {
+                  setError('Google Sign-In failed.');
+                }}
+                theme="filled_black"
+                shape="rectangular"
+                text={isLoginTab ? "signin_with" : "signup_with"}
+              />
+            </div>
           </div>
         </div>
       )}
