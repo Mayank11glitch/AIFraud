@@ -10,6 +10,8 @@ import { NotificationProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext';
 import { Toaster } from 'react-hot-toast';
 
+import ProtectedRoute from './components/ProtectedRoute';
+
 function App() {
   return (
     <Router>
@@ -19,10 +21,10 @@ function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/scan" element={<Scanner />} />
-              <Route path="/analysis" element={<Analysis />} />
-              <Route path="/explainable" element={<Explainable />} />
-              <Route path="/behavioral" element={<Behavioral />} />
+              <Route path="/scan" element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
+              <Route path="/analysis" element={<ProtectedRoute><Analysis /></ProtectedRoute>} />
+              <Route path="/explainable" element={<ProtectedRoute><Explainable /></ProtectedRoute>} />
+              <Route path="/behavioral" element={<ProtectedRoute><Behavioral /></ProtectedRoute>} />
             </Routes>
           </div>
           <Toaster
