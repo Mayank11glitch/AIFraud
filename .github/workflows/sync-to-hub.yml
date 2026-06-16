@@ -37,7 +37,7 @@ jobs:
           
           # Restore the preserved models
           mkdir -p /tmp/hf_space/backend/models
-          cp -r /tmp/preserved_models/* /tmp/hf_space/backend/models/ 2>/dev/null || echo "No models to restore"
+          cp -rn /tmp/preserved_models/* /tmp/hf_space/backend/models/ 2>/dev/null || echo "No models to restore"
           
           # 5. Generate the required Hugging Face Space configuration README
           echo "---" > /tmp/hf_space/README.md
