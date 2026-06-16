@@ -54,5 +54,4 @@ jobs:
           # 6. Commit and push to Hugging Face
           git add .
           git commit -m "Auto-sync backend and fix configuration" || echo "No changes to commit"
-          git pull --rebase origin main || true
-          git push origin main
+          git push -f origin main
