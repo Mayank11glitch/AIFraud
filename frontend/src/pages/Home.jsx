@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import {
   PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, AreaChart, Area, Legend
@@ -29,20 +30,29 @@ const Home = () => {
   const [scanHistory, setScanHistory] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [historyTab, setHistoryTab] = useState('global');
+  const { user, token } = useContext(AuthContext);
 
   useEffect(() => {
+    fetchDashboardData();
+  }, [historyTab, token]); // Refetch if tab changes or user logs in/out
+
+  const fetchDashboardData = () => {
+    setLoading(true);
+    const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+    
     Promise.all([
-      fetch(`${API_BASE}/api/history?limit=10`).then(r => r.json()),
+      fetch(`${API_BASE}/api/history?limit=10&scope=${historyTab}`, { headers }).then(r => r.ok ? r.json() : []),
       fetch(`${API_BASE}/api/stats`).then(r => r.json())
     ]).then(([history, statsData]) => {
-      setScanHistory(history);
+      setScanHistory(history || []);
       setStats(statsData);
       setLoading(false);
     }).catch(err => {
       console.error('Failed to fetch dashboard data:', err);
       setLoading(false);
     });
-  }, []);
+  };
 
   const getRiskBadge = (level) => {
     const colors = {
@@ -754,17 +764,39 @@ const Home = () => {
                 marginBottom: '16px',
               }}
             >
-              Recent Scans
+              Scan History
             </h2>
-            <p style={{ fontFamily: '"Satoshi", sans-serif', fontSize: '16px', color: '#838282', fontWeight: 400 }}>
-              Live feed of the latest threats detected by our AI engine.
+            <p style={{ fontFamily: '"Satoshi", sans-serif', fontSize: '16px', color: '#838282', fontWeight: 400, marginBottom: '24px' }}>
+              Feed of the latest threats detected by our AI engine.
             </p>
+            
+            <div className="flex justify-center gap-4 mb-8">
+              <button
+                onClick={() => setHistoryTab('global')}
+                className={`px-6 py-2 font-body text-xs font-bold uppercase tracking-widest border-2 transition-colors ${historyTab === 'global' ? 'border-[#111111] bg-[#111111] text-[#f2f2f2]' : 'border-[#111111] bg-transparent text-[#111111]'}`}
+              >
+                Global Feed
+              </button>
+              <button
+                onClick={() => {
+                  if (user) {
+                    setHistoryTab('my');
+                  } else {
+                    alert('Please login to view your personal scans.');
+                  }
+                }}
+                className={`px-6 py-2 font-body text-xs font-bold uppercase tracking-widest border-2 transition-colors ${historyTab === 'my' ? 'border-[#111111] bg-[#111111] text-[#f2f2f2]' : 'border-[#111111] bg-transparent text-[#111111]'} ${!user ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                My Scans
+              </button>
+            </div>
+            
             {scanHistory.length > 0 && (
               <a
                 href={`${API_BASE}/api/export/csv`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-4 transition-all"
+                className="inline-flex items-center gap-2 transition-all"
                 style={{
                   height: '36px',
                   padding: '0 20px',
@@ -834,7 +866,7 @@ const Home = () => {
               <table className="w-full">
                 <thead>
                   <tr style={{ backgroundColor: '#fafafa', borderBottom: '1px solid rgba(30,30,30,0.08)' }}>
-                    {['Type', 'Scan ID', 'Risk Score', 'Risk Level', 'Threats', 'Time', 'Action'].map((col) => (
+                    {['Type', 'Source', 'Scan ID', 'Risk Score', 'Risk Level', 'Threats', 'Time', 'Action'].map((col) => (
                       <th
                         key={col}
                         className="text-left px-6 py-4"
@@ -866,6 +898,11 @@ const Home = () => {
                           <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#838282' }}>{getTypeIcon(scan.type)}</span>
                           <span style={{ fontFamily: '"Satoshi", sans-serif', fontSize: '13px', fontWeight: 600, textTransform: 'capitalize', color: '#111111' }}>{scan.type}</span>
                         </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="font-body" style={{ fontSize: '12px', color: '#111111', fontWeight: 600 }}>
+                          {scan.source || 'Unknown'}
+                        </span>
                       </td>
                       <td className="px-6 py-4">
                         <span className="font-mono" style={{ fontSize: '12px', color: '#b6b5b5' }}>

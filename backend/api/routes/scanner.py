@@ -5,13 +5,15 @@ from services.scam_detection import process_image, process_video, process_url, p
 from sqlalchemy.orm import Session
 from database import get_db
 import models.db_models as db_models
+from typing import Optional
+from api.routes.auth import get_current_user
 import json
 import asyncio
 from api.ws_manager import manager
 
 router = APIRouter(prefix="/scan", tags=["Scanner"])
 
-def save_scan_to_db(db: Session, result: ScanningResult):
+def save_scan_to_db(db: Session, result: ScanningResult, source: Optional[str] = None, user_id: Optional[int] = None):
     """Persist a ScanningResult into the SQLite database."""
     db_record = db_models.ScanRecord(
         id=result.id,
@@ -21,7 +23,9 @@ def save_scan_to_db(db: Session, result: ScanningResult):
         risk_level=result.risk_level,
         threat_categories=json.dumps(result.threat_categories),
         raw_text_extracted=result.raw_text_extracted,
-        behavioral_profile=json.dumps(result.behavioral_profile) if result.behavioral_profile else None
+        behavioral_profile=json.dumps(result.behavioral_profile) if result.behavioral_profile else None,
+        source=source,
+        user_id=user_id
     )
     
     for exp in result.explanations:
@@ -37,36 +41,68 @@ def save_scan_to_db(db: Session, result: ScanningResult):
     db.commit()
 
 @router.post("/image", response_model=ScanningResult)
-async def scan_image(file: UploadFile = File(...), ephemeral: str = Form("false"), db: Session = Depends(get_db)):
+async def scan_image(
+    file: UploadFile = File(...), 
+    ephemeral: str = Form("false"), 
+    source: Optional[str] = Form(None),
+    db: Session = Depends(get_db),
+    current_user: Optional[db_models.User] = Depends(get_current_user)
+):
     contents = await file.read()
     result = process_image(contents)
+    result.source = source
+    result.user_id = current_user.id if current_user else None
     if ephemeral.lower() != "true":
-        save_scan_to_db(db, result)
+        save_scan_to_db(db, result, source, current_user.id if current_user else None)
     broadcast_scan_result(result)
     return result
 
 @router.post("/video", response_model=ScanningResult)
-async def scan_video(file: UploadFile = File(...), ephemeral: str = Form("false"), db: Session = Depends(get_db)):
+async def scan_video(
+    file: UploadFile = File(...), 
+    ephemeral: str = Form("false"), 
+    source: Optional[str] = Form(None),
+    db: Session = Depends(get_db),
+    current_user: Optional[db_models.User] = Depends(get_current_user)
+):
     contents = await file.read()
     result = process_video(contents)
+    result.source = source
+    result.user_id = current_user.id if current_user else None
     if ephemeral.lower() != "true":
-        save_scan_to_db(db, result)
+        save_scan_to_db(db, result, source, current_user.id if current_user else None)
     broadcast_scan_result(result)
     return result
 
 @router.post("/url", response_model=ScanningResult)
-async def scan_url(url: str = Form(...), ephemeral: str = Form("false"), db: Session = Depends(get_db)):
+async def scan_url(
+    url: str = Form(...), 
+    ephemeral: str = Form("false"), 
+    source: Optional[str] = Form(None),
+    db: Session = Depends(get_db),
+    current_user: Optional[db_models.User] = Depends(get_current_user)
+):
     result = process_url(url)
+    result.source = source
+    result.user_id = current_user.id if current_user else None
     if ephemeral.lower() != "true":
-        save_scan_to_db(db, result)
+        save_scan_to_db(db, result, source, current_user.id if current_user else None)
     broadcast_scan_result(result)
     return result
 
 @router.post("/text", response_model=ScanningResult)
-async def scan_text(text: str = Form(...), ephemeral: str = Form("false"), db: Session = Depends(get_db)):
+async def scan_text(
+    text: str = Form(...), 
+    ephemeral: str = Form("false"), 
+    source: Optional[str] = Form(None),
+    db: Session = Depends(get_db),
+    current_user: Optional[db_models.User] = Depends(get_current_user)
+):
     result = process_text(text)
+    result.source = source
+    result.user_id = current_user.id if current_user else None
     if ephemeral.lower() != "true":
-        save_scan_to_db(db, result)
+        save_scan_to_db(db, result, source, current_user.id if current_user else None)
     broadcast_scan_result(result)
     return result
 
@@ -77,6 +113,9 @@ def broadcast_scan_result(result: ScanningResult):
         "risk_score": result.risk_score,
         "risk_level": result.risk_level,
         "threat_categories": result.threat_categories,
-        "timestamp": result.timestamp
+        "timestamp": result.timestamp,
+        "source": result.source
     }
+    
+    # Broadcast to all clients for real-time alerting
     asyncio.create_task(manager.broadcast(minimal_payload))

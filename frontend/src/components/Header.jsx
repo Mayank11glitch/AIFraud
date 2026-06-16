@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 const Header = () => {
   const location = useLocation();
+  const { user, login, register, logout } = useContext(AuthContext);
+  
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isLoginTab, setIsLoginTab] = useState(true);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const navLinks = [
     { name: 'Dashboard', path: '/' },
@@ -11,6 +20,31 @@ const Header = () => {
     { name: 'Explainable AI', path: '/explainable' },
     { name: 'Behavioral', path: '/behavioral' },
   ];
+
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    let success = false;
+    
+    if (isLoginTab) {
+      success = await login(username, password);
+      if (!success) setError('Invalid username or password');
+    } else {
+      if (!email) {
+        setError('Email is required');
+        return;
+      }
+      success = await register(username, email, password);
+      if (!success) setError('Registration failed. Username/email might exist.');
+    }
+    
+    if (success) {
+      setShowAuthModal(false);
+      setUsername('');
+      setEmail('');
+      setPassword('');
+    }
+  };
 
   return (
     <header
@@ -67,6 +101,24 @@ const Header = () => {
 
       {/* Action Area */}
       <div className="flex items-center gap-4">
+        {user ? (
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-bold font-body uppercase tracking-wider">{user.username}</span>
+            <button 
+              onClick={logout}
+              className="text-xs font-bold font-body uppercase tracking-wider underline hover:text-red-600 transition-colors"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowAuthModal(true)}
+            className="text-xs font-bold font-body uppercase tracking-wider hover:underline"
+          >
+            Login
+          </button>
+        )}
         <Link
           to="/scan"
           className="hidden md:flex items-center justify-center px-6 brutal-btn relative transition-transform active:translate-x-[2px] active:translate-y-[2px]"
@@ -94,6 +146,84 @@ const Header = () => {
           Start Scanning
         </Link>
       </div>
+
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-[#f2f2f2] border-2 border-[#111111] p-8 w-full max-w-md relative" style={{ boxShadow: '8px 8px 0px #111111' }}>
+            <button 
+              className="absolute top-4 right-4 material-symbols-outlined text-[#111111] hover:opacity-50"
+              onClick={() => setShowAuthModal(false)}
+            >
+              close
+            </button>
+            <h2 className="text-2xl font-display font-bold mb-6 text-[#111111] uppercase tracking-tighter">
+              {isLoginTab ? 'Access Terminal' : 'Register Operator'}
+            </h2>
+            
+            <div className="flex gap-4 mb-6 border-b-2 border-[#111111] pb-2">
+              <button 
+                className={`font-body text-xs font-bold uppercase tracking-wider ${isLoginTab ? 'text-[#111111] underline' : 'text-[#838282]'}`}
+                onClick={() => setIsLoginTab(true)}
+              >
+                Login
+              </button>
+              <button 
+                className={`font-body text-xs font-bold uppercase tracking-wider ${!isLoginTab ? 'text-[#111111] underline' : 'text-[#838282]'}`}
+                onClick={() => setIsLoginTab(false)}
+              >
+                Register
+              </button>
+            </div>
+
+            <form onSubmit={handleAuthSubmit} className="flex flex-col gap-4">
+              {error && <div className="bg-red-100 text-red-800 p-2 text-xs font-bold font-body">{error}</div>}
+              
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold uppercase tracking-wider font-body text-[#111111]">Username</label>
+                <input 
+                  type="text" 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="bg-white border-2 border-[#111111] p-3 text-sm focus:outline-none focus:ring-0" 
+                  required
+                />
+              </div>
+
+              {!isLoginTab && (
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold uppercase tracking-wider font-body text-[#111111]">Email</label>
+                  <input 
+                    type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="bg-white border-2 border-[#111111] p-3 text-sm focus:outline-none focus:ring-0" 
+                    required
+                  />
+                </div>
+              )}
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold uppercase tracking-wider font-body text-[#111111]">Password</label>
+                <input 
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-white border-2 border-[#111111] p-3 text-sm focus:outline-none focus:ring-0" 
+                  required
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="mt-4 bg-[#111111] text-[#f2f2f2] p-3 text-sm font-bold uppercase tracking-widest hover:bg-black active:translate-y-1 transition-all"
+              >
+                {isLoginTab ? 'Execute Login' : 'Initialize Account'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

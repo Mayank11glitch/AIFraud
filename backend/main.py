@@ -4,6 +4,7 @@ from api.routes import scanner
 from api.routes import history
 from api.routes import stats
 from api.routes import export
+from api.routes import auth
 from api.ws_manager import manager
 import os
 
@@ -41,6 +42,7 @@ app.include_router(scanner.router, prefix="/api")
 app.include_router(history.router, prefix="/api")
 app.include_router(stats.router, prefix="/api")
 app.include_router(export.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")
 
 # WebSocket endpoint — mounted directly on app to bypass CORS middleware
 @app.websocket("/ws/notifications")

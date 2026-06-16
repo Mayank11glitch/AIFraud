@@ -61,30 +61,16 @@ export const NotificationProvider = ({ children }) => {
         }
         const catString = cats && cats.length > 0 ? cats.join(', ') : 'Suspicious Activity';
 
+        // Only show global toasts for High or Critical network-wide threats
         if (scan.risk_level === 'Critical' || scan.risk_level === 'High') {
+            const sourceDisplay = scan.source ? `Source: ${scan.source}` : 'Unknown Source';
             toast.error(
                 <div>
-                    <strong>🔴 {scan.risk_level} Threat Detected!</strong>
-                    <div className="text-sm mt-1">{catString}</div>
-                    <div className="text-xs text-gray-500 mt-1">Score: {scan.risk_score}/100</div>
+                    <strong className="text-xs uppercase tracking-widest font-body">🚨 Global Alert: {scan.risk_level} Threat</strong>
+                    <div className="text-sm font-bold mt-1 font-display">{catString}</div>
+                    <div className="text-xs mt-1 font-body text-red-700">{sourceDisplay}</div>
                 </div>,
-                { duration: 6000, style: { border: '1px solid #ef4444', padding: '16px', color: '#7f1d1d' } }
-            );
-        } else if (scan.risk_level === 'Medium') {
-            toast(
-                <div>
-                    <strong>🟠 Warning: Medium Risk</strong>
-                    <div className="text-sm mt-1">{catString}</div>
-                </div>,
-                { icon: '⚠️', duration: 4000, style: { border: '1px solid #f59e0b', padding: '16px' } }
-            );
-        } else {
-            toast.success(
-                <div>
-                    <strong>🟢 Clean Scan</strong>
-                    <div className="text-sm mt-1">No significant threats found.</div>
-                </div>,
-                { duration: 3000, style: { border: '1px solid #10b981', padding: '16px' } }
+                { duration: 8000, style: { border: '2px solid #111111', padding: '16px', color: '#111111', backgroundColor: '#fca5a5', borderRadius: '0', boxShadow: '4px 4px 0px #111111' } }
             );
         }
     };

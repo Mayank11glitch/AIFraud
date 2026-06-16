@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import useScrollReveal, { useStaggerReveal } from '../hooks/useScrollReveal';
 import { API_BASE } from '../config/api';
 import { isNative } from '../config/platform';
@@ -39,9 +40,11 @@ const base64ToFile = (base64Data, filename, mimeType) => {
 const Scanner = () => {
   const [activeTab, setActiveTab] = useState('image');
   const [inputValue, setInputValue] = useState('');
+  const [sourceValue, setSourceValue] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
   const [isIncognito, setIsIncognito] = useState(false);
+  const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
@@ -82,6 +85,9 @@ const Scanner = () => {
       let endpoint = '';
       
       formData.append('ephemeral', isIncognito ? 'true' : 'false');
+      if (sourceValue) {
+        formData.append('source', sourceValue);
+      }
 
       if (activeTab === 'image') {
         formData.append('file', selectedFile);
@@ -98,8 +104,14 @@ const Scanner = () => {
         endpoint = '/api/scan/text';
       }
 
+      const headers = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST',
+        headers: headers,
         body: formData,
       });
 
@@ -221,6 +233,20 @@ const Scanner = () => {
                 )}
               </div>
             )}
+            
+            {/* Source Input */}
+            <div className="flex flex-col gap-2 mt-6 border-t border-[#333333] pt-6">
+              <label className="font-body text-[#f2f2f2] text-[11px] font-bold uppercase tracking-[0.1em]">
+                Where did you encounter this? (Optional)
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. WhatsApp, Unknown Sender, Facebook Ad..."
+                value={sourceValue}
+                onChange={(e) => setSourceValue(e.target.value)}
+                className="w-full px-5 py-4 font-body border border-[#444444] bg-[#151515] text-[#f2f2f2] focus:border-[#f2f2f2] focus:ring-0 outline-none transition-colors placeholder:text-[#555555]"
+              />
+            </div>
           </div>
 
           {/* Action Button & Toggles */}
