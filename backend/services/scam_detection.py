@@ -1002,7 +1002,10 @@ def _analyze_audio_stream(tmp_video_path):
     
     try:
         import whisper
-        from moviepy.editor import VideoFileClip
+        try:
+            from moviepy import VideoFileClip # v2.x
+        except ImportError:
+            from moviepy.editor import VideoFileClip # v1.x
         
         tmp_audio_path = tmp_video_path.replace(".mp4", ".wav")
         clip = VideoFileClip(tmp_video_path)
