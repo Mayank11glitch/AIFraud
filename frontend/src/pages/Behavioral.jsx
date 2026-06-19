@@ -106,7 +106,7 @@ const Behavioral = () => {
       </section>
 
       {/* Radar Chart Section */}
-      <section className="flex flex-col p-10 bg-[#ffffff] border border-[rgba(30,30,30,0.08)]">
+      <section className="flex flex-col p-10 brutal-card">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div>
             <h3 className="font-body text-[#b6b5b5] text-[11px] font-bold uppercase tracking-[0.1em] mb-3">
@@ -225,7 +225,7 @@ const Behavioral = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Card: Urgency */}
-          <div className="service-card group flex flex-col p-8 bg-[#f2f2f2]">
+          <div className="brutal-card group flex flex-col p-8">
             <div className="flex justify-between items-start mb-8">
               <div className="icon-container bg-[#ffffff]">
                 <span className="material-symbols-outlined text-[24px] text-[#111111]">timer</span>
@@ -249,7 +249,7 @@ const Behavioral = () => {
           </div>
 
           {/* Card: Fear */}
-          <div className="service-card group flex flex-col p-8 bg-[#f2f2f2]">
+          <div className="brutal-card group flex flex-col p-8">
             <div className="flex justify-between items-start mb-8">
               <div className="icon-container bg-[#ffffff]">
                 <span className="material-symbols-outlined text-[24px] text-[#111111]">warning</span>
@@ -273,7 +273,7 @@ const Behavioral = () => {
           </div>
 
           {/* Card: Authority */}
-          <div className="service-card group flex flex-col p-8 bg-[#f2f2f2]">
+          <div className="brutal-card group flex flex-col p-8">
             <div className="flex justify-between items-start mb-8">
               <div className="icon-container bg-[#ffffff]">
                 <span className="material-symbols-outlined text-[24px] text-[#111111]">admin_panel_settings</span>
@@ -297,7 +297,7 @@ const Behavioral = () => {
           </div>
 
           {/* Card: Reward */}
-          <div className="service-card group flex flex-col p-8 bg-[#f2f2f2]">
+          <div className="brutal-card group flex flex-col p-8">
             <div className="flex justify-between items-start mb-8">
               <div className="icon-container bg-[#ffffff]">
                 <span className="material-symbols-outlined text-[24px] text-[#111111]">redeem</span>
@@ -326,12 +326,12 @@ const Behavioral = () => {
       <section className="flex justify-center border-t border-[rgba(30,30,30,0.08)] pt-12 pb-8">
         <div className="flex gap-4 flex-wrap justify-center w-full max-w-md">
           <button
-            className="flex items-center justify-center font-body text-[12px] font-bold uppercase tracking-[0.1em] h-[48px] px-8 bg-[#111111] text-[#f2f2f2] w-full sm:w-auto transition-colors hover:bg-[rgba(17,17,17,0.85)]"
+            className="brutal-btn brutal-btn-dark w-full sm:w-auto"
           >
             Generate Report
           </button>
           <button
-            className="flex items-center justify-center font-body text-[12px] font-bold uppercase tracking-[0.1em] h-[48px] px-8 bg-transparent border border-[#111111] text-[#111111] w-full sm:w-auto transition-colors hover:bg-[#111111] hover:text-[#f2f2f2]"
+            className="brutal-btn w-full sm:w-auto bg-transparent border border-[#111111] hover:border-[#111111]"
           >
             Export Data
           </button>

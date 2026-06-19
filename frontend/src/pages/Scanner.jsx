@@ -161,7 +161,7 @@ const Scanner = () => {
         </div>
 
         {/* Scanner Card */}
-        <div ref={scannerCardRef} className="reveal scale-blur bg-[#1a1a1a] border border-[#333333] rounded-none">
+        <div ref={scannerCardRef} className="reveal scale-blur brutal-card-dark">
           {/* Tabs */}
           <div className="flex overflow-x-auto border-b border-[#333333] px-2 md:px-6">
             <button
@@ -274,9 +274,9 @@ const Scanner = () => {
             <button
               onClick={handleScan}
               disabled={isScanning}
-              className={`flex w-full md:w-auto min-w-[240px] cursor-pointer items-center justify-center h-[56px] px-8 bg-[#f2f2f2] hover:bg-[#e0e0e0] ${isScanning ? 'opacity-70 cursor-not-allowed' : ''} text-[#111111] gap-3 font-body text-[13px] font-bold uppercase tracking-[0.1em] transition-colors`}
+              className={`brutal-btn w-full md:w-auto min-w-[240px] h-[56px] ${isScanning ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              <span className={`material-symbols-outlined text-[18px] ${isScanning ? 'animate-spin' : ''}`}>
+              <span className={`material-symbols-outlined text-[18px] mr-3 ${isScanning ? 'animate-spin' : ''}`}>
                 {isScanning ? 'autorenew' : 'security'}
               </span>
               <span>{isScanning ? 'Scanning...' : 'Scan Content Now'}</span>
@@ -286,7 +286,7 @@ const Scanner = () => {
 
         {/* Feature Highlights beneath scanner */}
         <div ref={featuresRef} className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="reveal fade-up flex flex-col p-8 bg-[#ffffff] border border-[rgba(30,30,30,0.1)]">
+          <div className="reveal fade-up flex flex-col p-8 brutal-card">
             <div className="w-12 h-12 bg-[#f2f2f2] mb-6 flex items-center justify-center self-start">
               <span className="material-symbols-outlined text-[20px] text-[#111111]">speed</span>
             </div>
@@ -296,7 +296,7 @@ const Scanner = () => {
             </div>
           </div>
 
-          <div className="reveal fade-up flex flex-col p-8 bg-[#ffffff] border border-[rgba(30,30,30,0.1)]">
+          <div className="reveal fade-up flex flex-col p-8 brutal-card">
             <div className="w-12 h-12 bg-[#f2f2f2] mb-6 flex items-center justify-center self-start">
               <span className="material-symbols-outlined text-[20px] text-[#111111]">shield_lock</span>
             </div>
@@ -306,7 +306,7 @@ const Scanner = () => {
             </div>
           </div>
 
-          <div className="reveal fade-up flex flex-col p-8 bg-[#ffffff] border border-[rgba(30,30,30,0.1)]">
+          <div className="reveal fade-up flex flex-col p-8 brutal-card">
             <div className="w-12 h-12 bg-[#f2f2f2] mb-6 flex items-center justify-center self-start">
               <span className="material-symbols-outlined text-[20px] text-[#111111]">psychology</span>
             </div>

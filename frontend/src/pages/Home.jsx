@@ -234,55 +234,16 @@ const Home = () => {
         >
           <Link
             to="/scan"
-            className="transition-all"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '48px',
-              padding: '0 32px',
-              backgroundColor: '#111111',
-              color: '#f2f2f2',
-              borderRadius: '9999px',
-              fontSize: '12px',
-              fontFamily: '"Satoshi", sans-serif',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              border: '1px solid #111111',
-              transitionDuration: '300ms',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#111111';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#111111';
-              e.currentTarget.style.color = '#f2f2f2';
-            }}
+            className="brutal-btn brutal-btn-dark"
           >
             Start Scanning →
           </Link>
           <a
             href="#analytics"
-            className="transition-all"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '48px',
-              padding: '0 32px',
-              backgroundColor: 'transparent',
-              color: '#838282',
-              fontSize: '12px',
-              fontFamily: '"Satoshi", sans-serif',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              transitionDuration: '300ms',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = '#111111'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = '#838282'; }}
+            className="brutal-btn bg-transparent border-transparent shadow-none hover:border-[#111111]"
+            style={{ color: '#838282' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#111111'; e.currentTarget.style.boxShadow = '4px 4px 0px #111111'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#838282'; e.currentTarget.style.boxShadow = 'none'; }}
           >
             View Analytics
           </a>
@@ -391,8 +352,7 @@ const Home = () => {
             <Link
               to={svc.link}
               key={i}
-              className="reveal fade-up service-card group flex flex-col justify-between"
-              style={{ padding: '40px 32px', minHeight: '280px' }}
+              className="reveal fade-up brutal-card group flex flex-col justify-between p-10 min-h-[280px]"
             >
               {/* Icon Container */}
               <div
@@ -605,7 +565,7 @@ const Home = () => {
           ) : (
             <>
               {/* Summary Cards */}
-              <div ref={statsGridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '1px', backgroundColor: 'rgba(30,30,30,0.08)', marginBottom: '48px' }}>
+              <div ref={statsGridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 {[
                   { icon: 'radar', label: 'Total Scans', value: stats.total_scans },
                   { icon: 'warning', label: 'Threats', value: stats.threats_detected },
@@ -614,13 +574,7 @@ const Home = () => {
                 ].map((card, i) => (
                   <div
                     key={i}
-                    className="reveal fade-up bg-white group"
-                    style={{
-                      padding: '32px',
-                      transition: 'background 300ms',
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#fafafa'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#ffffff'; }}
+                    className="reveal fade-up brutal-card p-8 group"
                   >
                     <div className="flex items-center gap-3" style={{ marginBottom: '16px' }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '20px', color: '#b6b5b5' }}>{card.icon}</span>
@@ -668,7 +622,7 @@ const Home = () => {
                   </ResponsiveContainer>
                 </div>
 
-                <div className="reveal scale-in bg-white p-8" style={{ border: '1px solid rgba(30,30,30,0.08)' }}>
+                <div className="reveal scale-in brutal-card p-8">
                   <h3 className="font-display" style={{ fontSize: '18px', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '24px', color: '#111111' }}>
                     Scans by Type
                   </h3>
@@ -690,7 +644,7 @@ const Home = () => {
 
               {/* Risk Trend */}
               {stats.risk_trend && stats.risk_trend.length > 1 && (
-                <div ref={trendRef} className="reveal fade-up slow bg-white p-8" style={{ border: '1px solid rgba(30,30,30,0.08)', marginBottom: '48px' }}>
+                <div ref={trendRef} className="reveal fade-up slow brutal-card p-8 mb-12">
                   <h3 className="font-display" style={{ fontSize: '18px', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '24px', color: '#111111' }}>
                     Risk Score Trend
                   </h3>
@@ -714,7 +668,7 @@ const Home = () => {
 
               {/* Top Threats */}
               {stats.top_threats && stats.top_threats.length > 0 && (
-                <div ref={threatsRef} className="reveal fade-up bg-white p-8" style={{ border: '1px solid rgba(30,30,30,0.08)', marginBottom: '48px' }}>
+                <div ref={threatsRef} className="reveal fade-up brutal-card p-8 mb-12">
                   <h3 className="font-display" style={{ fontSize: '18px', fontWeight: 600, letterSpacing: '-0.02em', marginBottom: '24px', color: '#111111' }}>
                     Top Threat Categories
                   </h3>
@@ -796,30 +750,9 @@ const Home = () => {
                 href={`${API_BASE}/api/export/csv`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 transition-all"
-                style={{
-                  height: '36px',
-                  padding: '0 20px',
-                  border: '1px solid #1e1e1e',
-                  borderRadius: '9999px',
-                  fontSize: '11px',
-                  fontFamily: '"Satoshi", sans-serif',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  color: '#1e1e1e',
-                  transitionDuration: '300ms',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#1e1e1e';
-                  e.currentTarget.style.color = '#f2f2f2';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#1e1e1e';
-                }}
+                className="brutal-btn brutal-btn-dark"
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>download</span>
+                <span className="material-symbols-outlined" style={{ fontSize: '14px', marginRight: '8px' }}>download</span>
                 Export CSV
               </a>
             )}
@@ -843,20 +776,7 @@ const Home = () => {
               </p>
               <Link
                 to="/scan"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  height: '40px',
-                  padding: '0 24px',
-                  backgroundColor: '#111111',
-                  color: '#f2f2f2',
-                  borderRadius: '9999px',
-                  fontSize: '12px',
-                  fontFamily: '"Satoshi", sans-serif',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                }}
+                className="brutal-btn brutal-btn-dark mt-4"
               >
                 Run First Scan
               </Link>

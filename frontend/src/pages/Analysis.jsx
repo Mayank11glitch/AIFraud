@@ -55,7 +55,7 @@ const Analysis = () => {
       <div className="flex flex-col max-w-[1000px] w-full gap-8">
         
         {/* Header Block */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 bg-white p-8 border border-[rgba(30,30,30,0.1)] relative">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 brutal-card p-8 relative">
           {/* Decorative bracket */}
           <div className="absolute top-0 left-0 w-2 h-full bg-[#111111]"></div>
           
@@ -69,12 +69,12 @@ const Analysis = () => {
           </div>
           
           <div className="flex flex-wrap gap-4 pl-4 sm:pl-0">
-            <Link to="/explainable" className="flex min-w-[140px] items-center justify-center gap-2 h-10 px-5 bg-transparent text-[#111111] text-[11px] font-bold uppercase tracking-[0.1em] border border-[#111111] hover:bg-[#111111] hover:text-[#f2f2f2] transition-colors">
-              <span className="material-symbols-outlined text-[16px]">psychology</span>
+            <Link to="/explainable" className="brutal-btn bg-transparent hover:bg-[#111111] text-[#111111] hover:text-[#f2f2f2]">
+              <span className="material-symbols-outlined text-[16px] mr-2">psychology</span>
               <span>XAI Explanations</span>
             </Link>
-            <a href={`${API_BASE}/api/export/pdf/${scanResult.id}`} target="_blank" rel="noopener noreferrer" className="flex min-w-[140px] items-center justify-center gap-2 h-10 px-5 bg-[#111111] text-[#f2f2f2] text-[11px] font-bold uppercase tracking-[0.1em] border border-[#111111] hover:bg-transparent hover:text-[#111111] transition-colors">
-              <span className="material-symbols-outlined text-[16px]">download</span>
+            <a href={`${API_BASE}/api/export/pdf/${scanResult.id}`} target="_blank" rel="noopener noreferrer" className="brutal-btn brutal-btn-dark">
+              <span className="material-symbols-outlined text-[16px] mr-2">download</span>
               <span>Export Record</span>
             </a>
           </div>
@@ -84,7 +84,7 @@ const Analysis = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Main Risk Assessment Card */}
-          <div className="flex flex-col gap-6 p-8 bg-white border border-[rgba(30,30,30,0.1)] col-span-1 lg:col-span-2">
+          <div className="flex flex-col gap-6 p-8 brutal-card col-span-1 lg:col-span-2">
             <div className="flex items-center gap-3 border-b border-[rgba(30,30,30,0.1)] pb-4">
               <span className="material-symbols-outlined text-[#111111]">warning</span>
               <h3 className="font-display text-[#111111] text-xl font-bold tracking-widest uppercase">Threat Assessment</h3>
@@ -122,7 +122,7 @@ const Analysis = () => {
           </div>
           
           {/* Secondary Stats */}
-          <div className="flex flex-col gap-6 p-8 bg-white border border-[rgba(30,30,30,0.1)]">
+          <div className="flex flex-col gap-6 p-8 brutal-card">
             <div className="flex items-center gap-3 border-b border-[rgba(30,30,30,0.1)] pb-4">
               <span className="material-symbols-outlined text-[#111111]">category</span>
               <h3 className="font-display text-[#111111] text-xl font-bold tracking-widest uppercase">Signatures</h3>
@@ -152,7 +152,7 @@ const Analysis = () => {
 
         {/* Feature Injection Segment */}
         {scanResult.type === 'url' && originalInput && (
-          <div className="flex flex-col border border-[rgba(30,30,30,0.1)] bg-white mt-4 p-8">
+          <div className="flex flex-col brutal-card mt-4 p-8">
             <div className="flex items-center justify-between border-b border-[rgba(30,30,30,0.1)] pb-4 mb-6">
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-[#111111]">public</span>
@@ -161,7 +161,7 @@ const Analysis = () => {
               {!previewUnlocked && (
                 <button 
                   onClick={() => setPreviewUnlocked(true)}
-                  className="px-4 py-2 bg-[#111111] text-[#f2f2f2] font-body text-[11px] font-bold uppercase tracking-[0.15em] hover:bg-transparent hover:text-[#111111] border border-[#111111] transition-colors"
+                  className="brutal-btn brutal-btn-dark h-10 px-4"
                 >
                   Unlock Sandbox
                 </button>

@@ -52,19 +52,19 @@ const Explainable = () => {
             </p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <Link to="/analysis" className="flex min-w-[120px] items-center justify-center gap-2 h-10 px-5 bg-transparent text-[#111111] text-[11px] font-bold uppercase tracking-[0.1em] border border-[#111111] hover:bg-[#111111] hover:text-[#f2f2f2] transition-colors">
-              <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+            <Link to="/analysis" className="brutal-btn bg-transparent hover:bg-[#111111] text-[#111111] hover:text-[#f2f2f2]">
+              <span className="material-symbols-outlined text-[16px] mr-2">arrow_back</span>
               <span>Analysis</span>
             </Link>
-            <button className="flex min-w-[140px] items-center justify-center gap-2 h-10 px-5 bg-[#111111] text-[#f2f2f2] text-[11px] font-bold uppercase tracking-[0.1em] border border-[#111111] hover:bg-transparent hover:text-[#111111] transition-colors">
-              <span className="material-symbols-outlined text-[16px]">print</span>
+            <button className="brutal-btn brutal-btn-dark">
+              <span className="material-symbols-outlined text-[16px] mr-2">print</span>
               <span>Print Log</span>
             </button>
           </div>
         </div>
 
         {/* Top Overview Block */}
-        <div className="flex flex-col lg:flex-row items-stretch gap-6 bg-white border border-[rgba(30,30,30,0.1)] p-0 lg:p-0">
+        <div className="flex flex-col lg:flex-row items-stretch gap-6 brutal-card p-0 lg:p-0 overflow-hidden">
           <div className="flex flex-col justify-center gap-4 p-8 flex-1 lg:border-r border-[rgba(30,30,30,0.1)]">
             <div className="flex items-center gap-4">
               <div className={`font-mono text-[11px] font-bold tracking-widest uppercase px-3 py-1 ${riskClass}`}>
@@ -105,7 +105,7 @@ const Explainable = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {scanResult.explanations && scanResult.explanations.length > 0 ? (
             scanResult.explanations.map((explanation, index) => (
-              <div key={index} className="flex flex-col gap-4 bg-white border border-[rgba(30,30,30,0.1)] p-6 relative group hover:border-[#111111] transition-colors">
+              <div key={index} className="flex flex-col gap-4 brutal-card p-6 relative group">
                 {/* Structural Accent */}
                 <div className="absolute top-0 left-0 w-1 h-full bg-[#e0e0e0] group-hover:bg-[#111111] transition-colors"></div>
                 

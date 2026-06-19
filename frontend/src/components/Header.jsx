@@ -133,27 +133,7 @@ const Header = () => {
         )}
         <Link
           to="/scan"
-          className="hidden md:flex items-center justify-center px-6 brutal-btn relative transition-transform active:translate-x-[2px] active:translate-y-[2px]"
-          style={{
-            height: '42px',
-            backgroundColor: '#f2f2f2',
-            border: '2px solid #111111',
-            color: '#111111',
-            fontSize: '11px',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '0.15em',
-            fontFamily: '"Satoshi", sans-serif',
-            boxShadow: '4px 4px 0px #111111',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#111111';
-            e.currentTarget.style.color = '#f2f2f2';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#f2f2f2';
-            e.currentTarget.style.color = '#111111';
-          }}
+          className="hidden md:flex brutal-btn"
         >
           Start Scanning
         </Link>
@@ -228,7 +208,7 @@ const Header = () => {
 
               <button 
                 type="submit"
-                className="mt-4 bg-[#111111] text-[#f2f2f2] p-3 text-sm font-bold uppercase tracking-widest hover:bg-black active:translate-y-1 transition-all"
+                className="mt-4 brutal-btn brutal-btn-dark w-full"
               >
                 {isLoginTab ? 'Execute Login' : 'Initialize Account'}
               </button>
