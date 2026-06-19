@@ -65,7 +65,7 @@ const Explainable = () => {
 
         {/* Top Overview Block */}
         <div className="flex flex-col lg:flex-row items-stretch gap-6 brutal-card p-0 lg:p-0 overflow-hidden">
-          <div className="flex flex-col justify-center gap-4 p-8 flex-1 lg:border-r border-[rgba(30,30,30,0.1)]">
+          <div className="flex flex-col justify-center gap-4 p-6 md:p-8 flex-1 lg:border-r border-[rgba(30,30,30,0.1)]">
             <div className="flex items-center gap-4">
               <div className={`font-mono text-[11px] font-bold tracking-widest uppercase px-3 py-1 ${riskClass}`}>
                 Level: {scanResult.risk_level}
@@ -83,7 +83,7 @@ const Explainable = () => {
           </div>
 
           {(scanResult.raw_text_extracted || scanResult.type === 'text') && (
-            <div className="flex-1 p-8 bg-[#f9f9f9]">
+            <div className="flex-1 p-6 md:p-8 bg-[#f9f9f9]">
               <h3 className="font-mono text-[10px] font-bold text-[#838282] mb-4 uppercase tracking-[0.2em] border-b border-[rgba(30,30,30,0.1)] pb-2">
                 Raw Input Extracted
               </h3>

@@ -541,10 +541,12 @@ html, body {
   transition: transform 300ms ease, box-shadow 300ms ease, background-color 300ms ease;
 }
 
-.brutal-card:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 6px 6px 0px #111111;
-  background-color: #fafafa;
+@media (hover: hover) {
+  .brutal-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 6px 6px 0px #111111;
+    background-color: #fafafa;
+  }
 }
 
 .brutal-card-dark {
@@ -554,10 +556,12 @@ html, body {
   transition: transform 300ms ease, box-shadow 300ms ease, background-color 300ms ease;
 }
 
-.brutal-card-dark:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 6px 6px 0px #111111;
-  background-color: #111111;
+@media (hover: hover) {
+  .brutal-card-dark:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 6px 6px 0px #111111;
+    background-color: #111111;
+  }
 }
 
 .brutal-btn {
@@ -580,11 +584,13 @@ html, body {
   cursor: pointer;
 }
 
-.brutal-btn:hover {
-  background-color: #111111;
-  color: #f2f2f2;
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px #111111;
+@media (hover: hover) {
+  .brutal-btn:hover {
+    background-color: #111111;
+    color: #f2f2f2;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #111111;
+  }
 }
 
 .brutal-btn:active {
@@ -597,7 +603,9 @@ html, body {
   color: #f2f2f2;
 }
 
-.brutal-btn-dark:hover {
-  background-color: transparent;
-  color: #111111;
+@media (hover: hover) {
+  .brutal-btn-dark:hover {
+    background-color: transparent;
+    color: #111111;
+  }
 }

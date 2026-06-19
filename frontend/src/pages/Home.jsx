@@ -229,7 +229,7 @@ const Home = () => {
         {/* CTA Buttons */}
         <div
           ref={heroCtaRef}
-          className="reveal fade-up flex gap-4 items-center"
+          className="reveal fade-up flex flex-col sm:flex-row gap-4 items-center w-full justify-center"
           style={{ marginTop: '40px' }}
         >
           <Link
@@ -352,7 +352,7 @@ const Home = () => {
             <Link
               to={svc.link}
               key={i}
-              className="reveal fade-up brutal-card group flex flex-col justify-between p-10 min-h-[280px]"
+              className="reveal fade-up brutal-card group flex flex-col justify-between p-6 md:p-10 min-h-[280px]"
             >
               {/* Icon Container */}
               <div
@@ -574,7 +574,7 @@ const Home = () => {
                 ].map((card, i) => (
                   <div
                     key={i}
-                    className="reveal fade-up brutal-card p-8 group"
+                    className="reveal fade-up brutal-card p-6 md:p-8 group"
                   >
                     <div className="flex items-center gap-3" style={{ marginBottom: '16px' }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '20px', color: '#b6b5b5' }}>{card.icon}</span>

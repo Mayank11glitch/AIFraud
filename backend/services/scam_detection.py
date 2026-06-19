@@ -226,7 +226,9 @@ CANDIDATE_LABELS = [
     "threat or blackmail",
     "authority impersonation",
     "promotional offer",
-    "identity theft"
+    "identity theft",
+    "emotional manipulation",
+    "unrealistic promise"
 ]
 
 
@@ -251,6 +253,7 @@ def ensemble_analyze_text(text: str, finetuned_classifier, nlp_classifier, ds) -
     
     # 1. Fine-tuned model prediction
     ft_risk = 0.0
+    legit_score = 0.0
     if _finetuned():
         try:
             result_ft = _finetuned()(text, top_k=None)
@@ -309,6 +312,12 @@ def ensemble_analyze_text(text: str, finetuned_classifier, nlp_classifier, ds) -
             scores["keyword"] = 0.0
     
     # Calculate weighted ensemble
+    # Dynamic Weighting: Shift weight to zero-shot if finetuned model has low confidence
+    if scores.get("finetuned", 0) < 0.60 and legit_score < 0.60:
+        weights["finetuned"] = 0.30
+        weights["zeroshot"] = 0.50
+        weights["keyword"] = 0.20
+
     ensemble_risk = (
         weights["finetuned"] * scores.get("finetuned", 0) +
         weights["zeroshot"] * scores.get("zeroshot", 0) +
@@ -319,12 +328,12 @@ def ensemble_analyze_text(text: str, finetuned_classifier, nlp_classifier, ds) -
 
 # Explainability Vocabularies (English + Hindi)
 XAI_VOCAB = {
-    "urgency": ["urgent", "immediately", "suspend", "block", "freeze", "24 hours", "action required", "turant", "jald", "warn", "last chance", "expire", "band", "block", "freeze"],
-    "phishing": ["verify", "kyc", "update", "link", "click here", "login", "password", "otp", "pin", "pan card", "adhar", "aadhar", "account", "khata", "password", "verify"],
-    "financial": ["payment", "transfer", "credited", "debited", "refund", "lottery", "prize", "cash", "rupees", "rs.", "inr", "upi", "paytm", "gpay", "phonepe", "paisa", "paise", "jeet", "lottery", "cashback"],
-    "threat": ["arrest", "police", "legal action", "fine", "penalty", "warrant", "court", "jail", "fir", "kanoon", "jurmana", "cbi", "tax"],
-    "authority": ["irs", "police", "bank", "manager", "admin", "support", "government", "sbi", "hdfc", "icici", "rbi", "official", "department", "customs", "officer"],
-    "reward": ["winner", "congratulations", "won", "prize", "gift", "free", "selected", "claim", "bonus", "reward", "offer", "discount", "lucky", "draw", "iphone", "car"]
+    "urgency": ["urgent", "immediately", "suspend", "block", "freeze", "24 hours", "action required", "turant", "jald", "warn", "last chance", "expire", "band", "act now", "limited time", "don't delay", "final notice", "hurry"],
+    "phishing": ["verify", "kyc", "update", "link", "click here", "login", "password", "otp", "pin", "pan card", "adhar", "aadhar", "account", "khata", "secure", "confirm identity", "unauthorized access", "validate"],
+    "financial": ["payment", "transfer", "credited", "debited", "refund", "lottery", "prize", "cash", "rupees", "rs.", "inr", "upi", "paytm", "gpay", "phonepe", "paisa", "paise", "jeet", "cashback", "crypto", "bitcoin", "investment", "roi"],
+    "threat": ["arrest", "police", "legal action", "fine", "penalty", "warrant", "court", "jail", "fir", "kanoon", "jurmana", "cbi", "tax", "sue", "lawsuit", "fbi", "seize", "deportation"],
+    "authority": ["irs", "police", "bank", "manager", "admin", "support", "government", "sbi", "hdfc", "icici", "rbi", "official", "department", "customs", "officer", "security team", "fraud department"],
+    "reward": ["winner", "congratulations", "won", "prize", "gift", "free", "selected", "claim", "bonus", "reward", "offer", "discount", "lucky", "draw", "iphone", "car", "exclusive", "giveaway", "jackpot"]
 }
 
 def extract_matched_words(text: str, category: str, max_words=3) -> list:
@@ -365,6 +374,19 @@ def check_adversarial_input(text: str) -> tuple:
             return True, pattern
     return False, None
 
+def normalize_text(text: str) -> str:
+    """Strip obfuscation patterns like zero-width spaces, excessive punctuation, and wide spacing."""
+    import re
+    # Remove zero-width characters
+    text = re.sub(r'[\u200B-\u200D\uFEFF]', '', text)
+    # Condense multiple spaces/newlines
+    text = re.sub(r'\s+', ' ', text)
+    # Fix wide spacing in words (e.g., "A m a z o n" -> "Amazon") if mostly single letters
+    text = re.sub(r'(?<=\b[a-zA-Z])\s+(?=[a-zA-Z]\b)', '', text)
+    # Remove excessive repeated punctuation often used to confuse parsers
+    text = re.sub(r'([.,!?-])\1+', r'\1', text)
+    return text.strip()
+
 @functools.lru_cache(maxsize=128)
 def analyze_text_with_nlp(text: str):
     empty_profile = {"Urgency": 0.0, "Fear": 0.0, "Authority": 0.0, "Reward": 0.0}
@@ -383,6 +405,28 @@ def analyze_text_with_nlp(text: str):
             description=f"Detected a malicious attempt to bypass AI analysis using prompt injection: '{adv_pattern}'.",
             risk_contribution=100.0
         )], empty_profile
+        
+    # 1b. Text Normalization (Anti-obfuscation)
+    text = normalize_text(text)
+    
+    # 1c. Inline URL Extraction
+    import re
+    inline_urls = re.findall(r'(https?://\S+|www\.\S+)', text)
+    inline_url_risk = 0.0
+    inline_url_explanations = []
+    if inline_urls and _url_clf():
+        for url in inline_urls:
+            try:
+                res = _url_clf()(url)[0]
+                if res['label'] != 'benign' and res['score'] > 0.6:
+                    inline_url_risk = max(inline_url_risk, res['score'] * 100)
+                    inline_url_explanations.append(FeatureExplanation(
+                        feature="Malicious Embedded URL",
+                        description=f"Found a deceptive URL ({url}) classified as {res['label'].replace('_', ' ')} ({res['score']:.0%}).",
+                        risk_contribution=round(res['score'] * 40, 1)
+                    ))
+            except Exception:
+                pass
     
     # Get dataset instance for keyword matching
     try:
@@ -407,7 +451,12 @@ def analyze_text_with_nlp(text: str):
         # Reduce for legitimate signals
         if scores_zs.get("legitimate communication", 0) > 0.7:
             final_risk -= 15
-        
+            
+        # Boost if embedded URL is malicious
+        if inline_url_risk > 50:
+            final_risk += (inline_url_risk * 0.4) # Add 40% of the URL risk to the text risk
+            ensemble_cats.append("Embedded Malicious Link")
+            
         final_risk = max(0, min(100, final_risk))
         
         # Combine categories
@@ -435,6 +484,7 @@ def analyze_text_with_nlp(text: str):
                 
         # Generate Explanations using zero-shot scores
         explanations = []
+        explanations.extend(inline_url_explanations)
         
         # 1. Urgency Explanation
         urgency_score = scores_zs.get("urgency", 0)

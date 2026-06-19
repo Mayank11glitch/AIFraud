@@ -106,7 +106,7 @@ const Behavioral = () => {
       </section>
 
       {/* Radar Chart Section */}
-      <section className="flex flex-col p-10 brutal-card">
+      <section className="flex flex-col p-6 md:p-10 brutal-card">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div>
             <h3 className="font-body text-[#b6b5b5] text-[11px] font-bold uppercase tracking-[0.1em] mb-3">
@@ -225,7 +225,7 @@ const Behavioral = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Card: Urgency */}
-          <div className="brutal-card group flex flex-col p-8">
+          <div className="brutal-card group flex flex-col p-6 md:p-8">
             <div className="flex justify-between items-start mb-8">
               <div className="icon-container bg-[#ffffff]">
                 <span className="material-symbols-outlined text-[24px] text-[#111111]">timer</span>
@@ -249,7 +249,7 @@ const Behavioral = () => {
           </div>
 
           {/* Card: Fear */}
-          <div className="brutal-card group flex flex-col p-8">
+          <div className="brutal-card group flex flex-col p-6 md:p-8">
             <div className="flex justify-between items-start mb-8">
               <div className="icon-container bg-[#ffffff]">
                 <span className="material-symbols-outlined text-[24px] text-[#111111]">warning</span>
@@ -273,7 +273,7 @@ const Behavioral = () => {
           </div>
 
           {/* Card: Authority */}
-          <div className="brutal-card group flex flex-col p-8">
+          <div className="brutal-card group flex flex-col p-6 md:p-8">
             <div className="flex justify-between items-start mb-8">
               <div className="icon-container bg-[#ffffff]">
                 <span className="material-symbols-outlined text-[24px] text-[#111111]">admin_panel_settings</span>
@@ -297,7 +297,7 @@ const Behavioral = () => {
           </div>
 
           {/* Card: Reward */}
-          <div className="brutal-card group flex flex-col p-8">
+          <div className="brutal-card group flex flex-col p-6 md:p-8">
             <div className="flex justify-between items-start mb-8">
               <div className="icon-container bg-[#ffffff]">
                 <span className="material-symbols-outlined text-[24px] text-[#111111]">redeem</span>

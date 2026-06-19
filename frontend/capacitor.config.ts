@@ -5,12 +5,8 @@ const config: CapacitorConfig = {
   appName: 'ScamDetect AI',
   webDir: 'dist',
   server: {
-    // Uncomment below for local development (replace with your IP):
-    // url: 'http://192.168.x.x:5173',
-    // cleartext: true,
-
-    // Production: app loads from bundled dist/
-    androidScheme: 'https',
+    androidScheme: 'http',
+    cleartext: true,
   },
   plugins: {
     SplashScreen: {

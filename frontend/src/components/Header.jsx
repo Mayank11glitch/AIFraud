@@ -15,6 +15,7 @@ const Header = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { name: 'Dashboard', path: '/' },
@@ -111,33 +112,103 @@ const Header = () => {
         })}
       </nav>
 
-      {/* Action Area */}
+      {/* Action Area & Hamburger */}
       <div className="flex items-center gap-4">
-        {user ? (
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-bold font-body uppercase tracking-wider">{user.username}</span>
-            <button 
-              onClick={logout}
-              className="text-xs font-bold font-body uppercase tracking-wider underline hover:text-red-600 transition-colors"
+        {/* Desktop Action Area */}
+        <div className="hidden md:flex items-center gap-4">
+          {user ? (
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold font-body uppercase tracking-wider">{user.username}</span>
+              <button 
+                onClick={logout}
+                className="text-xs font-bold font-body uppercase tracking-wider underline hover:text-red-600 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowAuthModal(true)}
+              className="text-xs font-bold font-body uppercase tracking-wider hover:underline"
             >
-              Logout
+              Login
             </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setShowAuthModal(true)}
-            className="text-xs font-bold font-body uppercase tracking-wider hover:underline"
+          )}
+          <Link
+            to="/scan"
+            className="brutal-btn"
           >
-            Login
-          </button>
-        )}
-        <Link
-          to="/scan"
-          className="hidden md:flex brutal-btn"
+            Start Scanning
+          </Link>
+        </div>
+
+        {/* Mobile Hamburger Toggle */}
+        <button 
+          className="md:hidden flex items-center justify-center w-10 h-10 border-2 border-[#111111] bg-[#ffffff] text-[#111111] active:bg-[#111111] active:text-[#ffffff] transition-colors"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle Menu"
         >
-          Start Scanning
-        </Link>
+          <span className="material-symbols-outlined text-[24px]">
+            {isMobileMenuOpen ? 'close' : 'menu'}
+          </span>
+        </button>
       </div>
+
+      {/* Mobile Navigation Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden absolute top-[80px] left-0 w-full bg-[#f2f2f2] border-b-2 border-[#111111] z-40 flex flex-col p-6 gap-6 shadow-[0px_8px_0px_#111111]">
+          <nav className="flex flex-col gap-4">
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.path;
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`font-body relative py-2 border-b border-[rgba(17,17,17,0.1)]`}
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.15em',
+                    color: isActive ? '#111111' : '#838282',
+                  }}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+          </nav>
+          
+          <div className="flex flex-col gap-4 mt-2">
+            {user ? (
+              <div className="flex flex-col gap-4">
+                <span className="text-sm font-bold font-body uppercase tracking-wider text-[#111111]">Operator: {user.username}</span>
+                <button 
+                  onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                  className="brutal-btn w-full"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => { setShowAuthModal(true); setIsMobileMenuOpen(false); }}
+                className="brutal-btn w-full"
+              >
+                Login / Register
+              </button>
+            )}
+            <Link
+              to="/scan"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="brutal-btn brutal-btn-dark w-full"
+            >
+              Start Scanning
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Auth Modal */}
       {showAuthModal && (

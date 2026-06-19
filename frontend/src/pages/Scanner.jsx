@@ -152,7 +152,7 @@ const Scanner = () => {
         
         {/* Header Section */}
         <div ref={titleRef} className="reveal blur-in flex flex-col gap-4 mb-4 text-center items-center">
-          <h1 className="font-display text-[#111111] text-5xl md:text-6xl font-bold tracking-normal leading-none">
+          <h1 className="font-display text-[#111111] text-4xl md:text-5xl lg:text-6xl font-bold tracking-normal leading-none">
             Content Scanner
           </h1>
           <p className="font-body text-[#838282] text-lg font-normal leading-relaxed max-w-2xl">
@@ -195,7 +195,7 @@ const Scanner = () => {
           </div>
 
           {/* Input Area */}
-          <div className="p-8 md:p-12">
+          <div className="p-6 md:p-12">
             {(activeTab === 'image' || activeTab === 'video') ? (
               <label className="flex flex-col items-center justify-center gap-6 border-[1px] border-dashed border-[#444444] bg-[#151515] hover:bg-[#222222] transition-colors px-6 py-24 cursor-pointer group" onClick={isNative && activeTab === 'image' ? (e) => { e.preventDefault(); handleNativeCapture(); } : undefined}>
                 <input type="file" className="hidden" onChange={handleFileChange} accept={activeTab === 'image' ? "image/*" : "video/*"} />
@@ -255,7 +255,7 @@ const Scanner = () => {
           </div>
 
           {/* Action Button & Toggles */}
-          <div className="px-8 py-8 border-t border-[#333333] bg-[#151515] flex flex-col items-center gap-6">
+          <div className="px-6 md:px-8 py-8 border-t border-[#333333] bg-[#151515] flex flex-col items-center gap-6">
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => setIsIncognito(!isIncognito)}
@@ -286,7 +286,7 @@ const Scanner = () => {
 
         {/* Feature Highlights beneath scanner */}
         <div ref={featuresRef} className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="reveal fade-up flex flex-col p-8 brutal-card">
+          <div className="reveal fade-up flex flex-col p-6 md:p-8 brutal-card">
             <div className="w-12 h-12 bg-[#f2f2f2] mb-6 flex items-center justify-center self-start">
               <span className="material-symbols-outlined text-[20px] text-[#111111]">speed</span>
             </div>
@@ -296,7 +296,7 @@ const Scanner = () => {
             </div>
           </div>
 
-          <div className="reveal fade-up flex flex-col p-8 brutal-card">
+          <div className="reveal fade-up flex flex-col p-6 md:p-8 brutal-card">
             <div className="w-12 h-12 bg-[#f2f2f2] mb-6 flex items-center justify-center self-start">
               <span className="material-symbols-outlined text-[20px] text-[#111111]">shield_lock</span>
             </div>
@@ -306,7 +306,7 @@ const Scanner = () => {
             </div>
           </div>
 
-          <div className="reveal fade-up flex flex-col p-8 brutal-card">
+          <div className="reveal fade-up flex flex-col p-6 md:p-8 brutal-card">
             <div className="w-12 h-12 bg-[#f2f2f2] mb-6 flex items-center justify-center self-start">
               <span className="material-symbols-outlined text-[20px] text-[#111111]">psychology</span>
             </div>
