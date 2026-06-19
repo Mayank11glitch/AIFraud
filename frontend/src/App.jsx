@@ -8,6 +8,7 @@ import Behavioral from './pages/Behavioral';
 
 import { NotificationProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext';
+import { ScanProvider } from './context/ScanContext';
 import { Toaster } from 'react-hot-toast';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -19,25 +20,27 @@ function AppContent() {
   return (
     <Router>
       <AuthProvider>
-        <NotificationProvider>
-          <div className="relative flex min-h-screen flex-col group/design-root overflow-x-hidden w-full">
-            <Header />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/scan" element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
-              <Route path="/analysis" element={<ProtectedRoute><Analysis /></ProtectedRoute>} />
-              <Route path="/explainable" element={<ProtectedRoute><Explainable /></ProtectedRoute>} />
-              <Route path="/behavioral" element={<ProtectedRoute><Behavioral /></ProtectedRoute>} />
-            </Routes>
-          </div>
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              className: 'font-sans shadow-xl rounded-xl',
-              duration: 5000
-            }}
-          />
-        </NotificationProvider>
+        <ScanProvider>
+          <NotificationProvider>
+            <div className="relative flex min-h-screen flex-col group/design-root overflow-x-hidden w-full">
+              <Header />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/scan" element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
+                <Route path="/analysis" element={<ProtectedRoute><Analysis /></ProtectedRoute>} />
+                <Route path="/explainable" element={<ProtectedRoute><Explainable /></ProtectedRoute>} />
+                <Route path="/behavioral" element={<ProtectedRoute><Behavioral /></ProtectedRoute>} />
+              </Routes>
+            </div>
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                className: 'font-sans shadow-xl rounded-xl',
+                duration: 5000
+              }}
+            />
+          </NotificationProvider>
+        </ScanProvider>
       </AuthProvider>
     </Router>
   );

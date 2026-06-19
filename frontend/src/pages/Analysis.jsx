@@ -3,11 +3,15 @@ import { useLocation, Link, Navigate } from 'react-router-dom';
 import DecoyGenerator from '../components/DecoyGenerator';
 import DeepfakeVisualizer from '../components/DeepfakeVisualizer';
 import { API_BASE } from '../config/api';
+import { useScan } from '../context/ScanContext';
 
 const Analysis = () => {
   const location = useLocation();
-  const scanResult = location.state?.scanResult;
-  const originalInput = location.state?.originalInput;
+  const { scanResult: contextResult, originalInput: contextInput } = useScan();
+
+  // Prefer freshly-navigated location.state; fall back to persisted context
+  const scanResult = location.state?.scanResult ?? contextResult;
+  const originalInput = location.state?.originalInput ?? contextInput;
   const [previewUnlocked, setPreviewUnlocked] = useState(false);
 
   if (!scanResult) {
@@ -65,7 +69,7 @@ const Analysis = () => {
           </div>
           
           <div className="flex flex-wrap gap-4 pl-4 sm:pl-0">
-            <Link to="/explainable" state={{ scanResult }} className="flex min-w-[140px] items-center justify-center gap-2 h-10 px-5 bg-transparent text-[#111111] text-[11px] font-bold uppercase tracking-[0.1em] border border-[#111111] hover:bg-[#111111] hover:text-[#f2f2f2] transition-colors">
+            <Link to="/explainable" className="flex min-w-[140px] items-center justify-center gap-2 h-10 px-5 bg-transparent text-[#111111] text-[11px] font-bold uppercase tracking-[0.1em] border border-[#111111] hover:bg-[#111111] hover:text-[#f2f2f2] transition-colors">
               <span className="material-symbols-outlined text-[16px]">psychology</span>
               <span>XAI Explanations</span>
             </Link>

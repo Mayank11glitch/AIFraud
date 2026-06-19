@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { useScan } from '../context/ScanContext';
 import useScrollReveal, { useStaggerReveal } from '../hooks/useScrollReveal';
 import { API_BASE } from '../config/api';
 import { isNative } from '../config/platform';
@@ -45,6 +46,7 @@ const Scanner = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [isIncognito, setIsIncognito] = useState(false);
   const { token } = useContext(AuthContext);
+  const { setScanResult } = useScan();
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
@@ -121,6 +123,9 @@ const Scanner = () => {
         if (isNative && Haptics) {
           Haptics.impact({ style: ImpactStyle.Medium });
         }
+        // Store in global ScanContext (persists across page navigations)
+        setScanResult(data, inputValue);
+        // Also pass via location.state for pages that may still read it
         navigate('/analysis', { state: { scanResult: data, originalInput: inputValue } });
       } else {
         console.error('Scan failed:', await response.text());

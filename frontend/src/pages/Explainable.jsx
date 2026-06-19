@@ -1,9 +1,12 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import { useScan } from '../context/ScanContext';
 
 const Explainable = () => {
   const location = useLocation();
-  const scanResult = location.state?.scanResult;
+  const { scanResult: contextResult } = useScan();
+  // Prefer freshly-navigated location.state; fall back to persisted context
+  const scanResult = location.state?.scanResult ?? contextResult;
 
   if (!scanResult) {
     return (
@@ -49,7 +52,7 @@ const Explainable = () => {
             </p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <Link to="/analysis" state={{ scanResult }} className="flex min-w-[120px] items-center justify-center gap-2 h-10 px-5 bg-transparent text-[#111111] text-[11px] font-bold uppercase tracking-[0.1em] border border-[#111111] hover:bg-[#111111] hover:text-[#f2f2f2] transition-colors">
+            <Link to="/analysis" className="flex min-w-[120px] items-center justify-center gap-2 h-10 px-5 bg-transparent text-[#111111] text-[11px] font-bold uppercase tracking-[0.1em] border border-[#111111] hover:bg-[#111111] hover:text-[#f2f2f2] transition-colors">
               <span className="material-symbols-outlined text-[16px]">arrow_back</span>
               <span>Analysis</span>
             </Link>

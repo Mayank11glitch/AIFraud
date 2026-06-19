@@ -1,24 +1,33 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { API_BASE } from '../config/api';
+import { useScan } from '../context/ScanContext';
 
 const Behavioral = () => {
-  const [latestScan, setLatestScan] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { scanResult: activeScan } = useScan();
+  const [historyFallback, setHistoryFallback] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  // Only fetch history if there is no active scan in context
   useEffect(() => {
+    if (activeScan) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     const fetchHistory = async () => {
       try {
         const res = await fetch(`${API_BASE}/api/history?limit=10`);
         if (res.ok) {
           const data = await res.json();
-          // Find the most recent scan that actually has a behavioral profile over 0
           const interestingScan = data.find(s => s.behavioral_profile &&
             (s.behavioral_profile.Urgency > 0 || Object.values(s.behavioral_profile).reduce((a, b) => a + b, 0) > 0));
 
           if (interestingScan) {
-            setLatestScan(interestingScan);
+            setHistoryFallback(interestingScan);
           } else if (data.length > 0) {
-            setLatestScan(data[0]); // fallback to very latest
+            setHistoryFallback(data[0]);
           }
         }
       } catch (err) {
@@ -29,7 +38,11 @@ const Behavioral = () => {
     };
 
     fetchHistory();
-  }, []);
+  }, [activeScan]);
+
+  // Active scan wins; history is fallback
+  const latestScan = activeScan || historyFallback;
+
 
   // Default behavioral profile if none exists
   const profile = latestScan?.behavioral_profile || {
