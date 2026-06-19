@@ -43,95 +43,135 @@ from dataset.loader import get_dataset
 # LAZY MODEL LOADING — models load on first use, not at startup.
 # This prevents Render port-scan timeout on cold start.
 # =====================================================
+import threading
 _models = {}
+_model_lock = threading.Lock()  # Prevents concurrent model-load race conditions
+
+# On free-tier HF Spaces RAM is limited (~16GB shared). Skip the heaviest
+# optional models (deepfake ViT ~330MB) to avoid OOM during image scans.
+IS_HF_SPACE = os.getenv("SPACE_ID") is not None  # HF injects SPACE_ID automatically
+
+# ── Global EasyOCR singleton ─────────────────────────────────────────────────
+# Re-creating easyocr.Reader() per request downloads craft/recognition models
+# every time and spikes RAM. Singleton is created once and reused.
+_easyocr_reader = None
+_easyocr_lock = threading.Lock()
+
+def _get_easyocr():
+    """Return (and lazily initialise) the global EasyOCR reader."""
+    global _easyocr_reader
+    if _easyocr_reader is not None:
+        return _easyocr_reader
+    with _easyocr_lock:
+        if _easyocr_reader is not None:  # double-checked locking
+            return _easyocr_reader
+        try:
+            import easyocr
+            print("[OCR] Initialising EasyOCR reader (en + hi)...")
+            _easyocr_reader = easyocr.Reader(['en', 'hi'], gpu=False)
+            print("[OCR] EasyOCR ready.")
+        except Exception as e:
+            print(f"[OCR] Failed to load EasyOCR: {e}")
+            _easyocr_reader = None
+    return _easyocr_reader
 
 def _get_model(name):
     """Lazy-load a model by name. Returns the model or None on failure."""
     if name in _models:
         return _models[name]
+    with _model_lock:
+        if name in _models:  # double-checked locking
+            return _models[name]
 
-    # Ensure torch/transformers are loaded before any model loading
-    _ensure_ml_loaded()
+        # Ensure torch/transformers are loaded before any model loading
+        _ensure_ml_loaded()
 
-    try:
-        if name == "finetuned_classifier":
-            model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "scamdetect-finetuned")
-            if not os.path.isdir(model_path):
-                print(f"Fine-tuned model directory not found: {model_path}")
-                _models[name] = None
-                return None
-            print("Loading Fine-Tuned Custom Scam Classifier...")
-            _models[name] = _transformers.pipeline(
-                "text-classification",
-                model=model_path,
-                device=_GPU_MGR.get_device_index(),
-                top_k=None
-            )
-            print("Fine-Tuned Custom Model loaded successfully.")
+        # On HF Space free tier, skip the deepfake model to conserve RAM
+        if IS_HF_SPACE and name in ("deepfake_model", "deepfake_processor"):
+            print(f"[HF Space] Skipping '{name}' to conserve RAM on free tier.")
+            _models[name] = None
+            return None
 
-        elif name == "url_classifier":
-            model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "url-scamdetect-finetuned")
-            if not os.path.isdir(model_path):
-                print(f"Fine-tuned URL model directory not found: {model_path}")
-                _models[name] = None
-                return None
-            print("Loading Fine-Tuned URL Classifier...")
-            _models[name] = _transformers.pipeline(
-                "text-classification",
-                model=model_path,
-                device=_GPU_MGR.get_device_index()
-            )
-            print("Fine-Tuned URL Model loaded successfully.")
-
-        elif name == "nlp_classifier":
-            print("Loading Multilingual mDeBERTa-v3 classification pipeline...")
-            try:
+        try:
+            if name == "finetuned_classifier":
+                model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "scamdetect-finetuned")
+                if not os.path.isdir(model_path):
+                    print(f"Fine-tuned model directory not found: {model_path}")
+                    _models[name] = None
+                    return None
+                print("Loading Fine-Tuned Custom Scam Classifier...")
                 _models[name] = _transformers.pipeline(
-                    "zero-shot-classification",
-                    model="MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7",
+                    "text-classification",
+                    model=model_path,
+                    device=_GPU_MGR.get_device_index(),
+                    top_k=None
+                )
+                print("Fine-Tuned Custom Model loaded successfully.")
+
+            elif name == "url_classifier":
+                model_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "url-scamdetect-finetuned")
+                if not os.path.isdir(model_path):
+                    print(f"Fine-tuned URL model directory not found: {model_path}")
+                    _models[name] = None
+                    return None
+                print("Loading Fine-Tuned URL Classifier...")
+                _models[name] = _transformers.pipeline(
+                    "text-classification",
+                    model=model_path,
                     device=_GPU_MGR.get_device_index()
                 )
-                print("Multilingual mDeBERTa-v3 loaded successfully.")
-            except Exception:
-                print("Falling back to BART-large-MNLI...")
-                _models[name] = _transformers.pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=_GPU_MGR.get_device_index())
+                print("Fine-Tuned URL Model loaded successfully.")
 
-        elif name == "clip_model":
-            print("Loading CLIP visual classification model...")
-            from transformers import CLIPProcessor, CLIPModel
-            _models["clip_model"] = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(_GPU_MGR.get_device())
-            _models["clip_processor"] = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
-            print(f"CLIP model loaded successfully (on {_DEVICE.upper()}).")
+            elif name == "nlp_classifier":
+                print("Loading Multilingual mDeBERTa-v3 classification pipeline...")
+                try:
+                    _models[name] = _transformers.pipeline(
+                        "zero-shot-classification",
+                        model="MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7",
+                        device=_GPU_MGR.get_device_index()
+                    )
+                    print("Multilingual mDeBERTa-v3 loaded successfully.")
+                except Exception:
+                    print("Falling back to BART-large-MNLI...")
+                    _models[name] = _transformers.pipeline("zero-shot-classification", model="facebook/bart-large-mnli", device=_GPU_MGR.get_device_index())
 
-        elif name == "clip_processor":
-            # Loading clip_model also loads clip_processor
-            _get_model("clip_model")
-            return _models.get("clip_processor")
+            elif name == "clip_model":
+                print("Loading CLIP visual classification model...")
+                from transformers import CLIPProcessor, CLIPModel
+                _models["clip_model"] = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(_GPU_MGR.get_device())
+                _models["clip_processor"] = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+                print(f"CLIP model loaded successfully (on {_DEVICE.upper()}).")
 
-        elif name == "whisper_model":
-            import whisper
-            print("Loading Whisper 'tiny' model...")
-            whisper_device = "cuda" if _DEVICE == "cuda" else ("mps" if _DEVICE == "mps" else "cpu")
-            _models[name] = whisper.load_model("tiny", device=whisper_device)
-            print(f"Whisper model loaded successfully (on {_DEVICE.upper()}).")
+            elif name == "clip_processor":
+                # Loading clip_model also loads clip_processor
+                _get_model("clip_model")
+                return _models.get("clip_processor")
 
-        elif name == "deepfake_model":
-            print("Loading Deepfake Detection model...")
-            from transformers import AutoImageProcessor, AutoModelForImageClassification
-            _models["deepfake_processor"] = AutoImageProcessor.from_pretrained("hamzenium/ViT-Deepfake-Classifier")
-            _models["deepfake_model"] = AutoModelForImageClassification.from_pretrained("hamzenium/ViT-Deepfake-Classifier").to(_GPU_MGR.get_device())
-            _models["deepfake_model"].eval()
-            print(f"Deepfake detector loaded successfully (on {_DEVICE.upper()}).")
+            elif name == "whisper_model":
+                import whisper
+                print("Loading Whisper 'tiny' model...")
+                whisper_device = "cuda" if _DEVICE == "cuda" else ("mps" if _DEVICE == "mps" else "cpu")
+                _models[name] = whisper.load_model("tiny", device=whisper_device)
+                print(f"Whisper model loaded successfully (on {_DEVICE.upper()}).")
 
-        elif name == "deepfake_processor":
-            _get_model("deepfake_model")
-            return _models.get("deepfake_processor")
+            elif name == "deepfake_model":
+                print("Loading Deepfake Detection model...")
+                from transformers import AutoImageProcessor, AutoModelForImageClassification
+                _models["deepfake_processor"] = AutoImageProcessor.from_pretrained("hamzenium/ViT-Deepfake-Classifier")
+                _models["deepfake_model"] = AutoModelForImageClassification.from_pretrained("hamzenium/ViT-Deepfake-Classifier").to(_GPU_MGR.get_device())
+                _models["deepfake_model"].eval()
+                print(f"Deepfake detector loaded successfully (on {_DEVICE.upper()}).")
 
-    except Exception as e:
-        print(f"Error loading model '{name}': {e}")
-        _models[name] = None
+            elif name == "deepfake_processor":
+                _get_model("deepfake_model")
+                return _models.get("deepfake_processor")
 
-    return _models.get(name)
+        except Exception as e:
+            print(f"Error loading model '{name}': {e}")
+            _models[name] = None
+
+        return _models.get(name)
+
 
 
 # Convenience accessors (drop-in replacements for the old global variables)
@@ -569,82 +609,74 @@ def detect_deepfake_faces(pil_image):
 
 
 def process_image(image_bytes: bytes) -> ScanningResult:
-    import easyocr
     import io
     from PIL import Image
     import numpy as np
     import cv2
-    import concurrent.futures
-    
-    # Initialize reader (will use CPU if GPU not available)
-    try:
-        reader = easyocr.Reader(['en', 'hi'], gpu=False)  # English + Hindi OCR, CPU ONLY
-    except Exception as e:
-        print(f"Failed to load OCR reader: {e}")
-        reader = None
-        
+
     explanations = []
     threat_categories = []
     risk_score = 0.0
-    
+
     try:
         # Convert bytes to PIL Image
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+
+        # ── Cap image size to avoid RAM spikes (max 1024px on longest side) ──
+        max_dim = 1024
+        if max(image.width, image.height) > max_dim:
+            image.thumbnail((max_dim, max_dim), Image.LANCZOS)
+            print(f"[Image] Resized to {image.size} to conserve memory.")
+
         img_np = np.array(image)
-        
-        def run_clip():
-            return classify_image_with_clip(image)
-            
-        def run_deepfake():
-            return detect_deepfake_faces(image)
-            
-        def run_ocr():
-            text_out = ""
-            risk_out = 0.0
-            cats_out = []
-            expls_out = []
-            beh_out = None
-            if not reader:
-                return text_out, risk_out, cats_out, expls_out, beh_out
-                
+
+        # ========== SEQUENTIAL EXECUTION ==========
+        # Running all three concurrently caused simultaneous model-loading
+        # spikes that OOM-killed the HF Space container. Sequential execution
+        # keeps peak RAM flat because only one model loads at a time.
+
+        # 1. CLIP visual scan
+        print("[Image] Running CLIP visual scan...")
+        clip_risk, clip_cats, clip_expls = classify_image_with_clip(image)
+
+        # 2. Deepfake detection (skipped on HF free tier via IS_HF_SPACE guard)
+        print("[Image] Running deepfake detection...")
+        deepfake_risk, is_deepfake, deepfake_expl = detect_deepfake_faces(image)
+
+        # 3. OCR + NLP on extracted text
+        print("[Image] Running OCR...")
+        extracted_text = ""
+        ocr_risk = 0.0
+        nlp_cats = []
+        nlp_expls = []
+        beh_profile = None
+
+        reader = _get_easyocr()  # global singleton — no re-download on every request
+        if reader:
             try:
-                # ====== OpenCV Preprocessing for Accurate OCR ======
                 img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
                 gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
-                # Apply bilateral filter to remove noise while keeping edges
                 filtered = cv2.bilateralFilter(gray, 9, 75, 75)
-                # Adaptive block thresholding for high contrast text blocks
-                thresh = cv2.adaptiveThreshold(filtered, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-                
-                # Results using thresholded image
+                thresh = cv2.adaptiveThreshold(
+                    filtered, 255,
+                    cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
+                )
                 results = reader.readtext(thresh)
-                text_out = " ".join([res[1] for res in results])
-                
-                if text_out and len(text_out.strip()) >= 5:
-                    risk_out, _, cats_out, expls_out, beh_out = analyze_text_with_nlp(text_out)
-                    
-                    if risk_out > 60:
-                        expls_out.append(FeatureExplanation(
-                            feature="Text-in-Image Evasion", 
-                            description="Malicious text hidden inside an image is a common tactic to bypass spam filters.", 
+                extracted_text = " ".join([res[1] for res in results])
+
+                if extracted_text and len(extracted_text.strip()) >= 5:
+                    ocr_risk, _, nlp_cats, nlp_expls, beh_profile = analyze_text_with_nlp(extracted_text)
+                    if ocr_risk > 60:
+                        nlp_expls.append(FeatureExplanation(
+                            feature="Text-in-Image Evasion",
+                            description="Malicious text hidden inside an image is a common tactic to bypass spam filters.",
                             risk_contribution=10.0
                         ))
-                        risk_out = min(100.0, risk_out + 10)
+                        ocr_risk = min(100.0, ocr_risk + 10)
             except Exception as e:
-                print(f"OCR thread error: {e}")
-                
-            return text_out, risk_out, cats_out, expls_out, beh_out
+                print(f"[OCR] Error: {e}")
 
-        # ========== CONCURRENT EXECUTION ==========
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-            fut_clip = executor.submit(run_clip)
-            fut_df = executor.submit(run_deepfake)
-            fut_ocr = executor.submit(run_ocr)
-            
-            clip_risk, clip_cats, clip_expls = fut_clip.result()
-            deepfake_risk, is_deepfake, deepfake_expl = fut_df.result()
-            extracted_text, ocr_risk, nlp_cats, nlp_expls, beh_profile = fut_ocr.result()
-
+        # ── Merge results ──
         threat_categories.extend(clip_cats)
         explanations.extend(clip_expls)
 
@@ -663,17 +695,18 @@ def process_image(image_bytes: bytes) -> ScanningResult:
             risk_score = clip_risk
             if not explanations:
                 explanations.append(FeatureExplanation(
-                    feature="No Text Detected", 
-                    description="Image contains no readable text. Analysis based on visual content only.", 
+                    feature="No Text Detected",
+                    description="Image contains no readable text. Analysis based on visual content only.",
                     risk_contribution=0.0
                 ))
-        
+
         final_risk = max(0, min(100.0, risk_score))
         if final_risk > 85: risk_level = "Critical"
         elif final_risk > 65: risk_level = "High"
         elif final_risk > 40: risk_level = "Medium"
         else: risk_level = "Low"
-        
+
+        print(f"[Image] Scan complete — risk: {final_risk:.1f}% ({risk_level})")
         return ScanningResult(
             id=str(uuid.uuid4()),
             timestamp=datetime.datetime.utcnow().isoformat(),
@@ -681,11 +714,15 @@ def process_image(image_bytes: bytes) -> ScanningResult:
             risk_score=round(final_risk, 1),
             risk_level=risk_level,
             threat_categories=list(set(threat_categories)) if threat_categories else [],
-            explanations=explanations if explanations else [FeatureExplanation(feature="Clean Image", description="No scam indicators detected visually or via text extraction.", risk_contribution=0.0)],
+            explanations=explanations if explanations else [FeatureExplanation(
+                feature="Clean Image",
+                description="No scam indicators detected visually or via text extraction.",
+                risk_contribution=0.0
+            )],
             raw_text_extracted=extracted_text if extracted_text else "[No text detected]",
             behavioral_profile=beh_profile
         )
-        
+
     except Exception as e:
         print(f"Error processing image: {e}")
         return ScanningResult(
@@ -695,8 +732,13 @@ def process_image(image_bytes: bytes) -> ScanningResult:
             risk_score=50.0,
             risk_level="Unknown",
             threat_categories=["Processing Error"],
-            explanations=[FeatureExplanation(feature="Image Read Error", description=str(e), risk_contribution=0.0)]
+            explanations=[FeatureExplanation(
+                feature="Image Read Error",
+                description=str(e),
+                risk_contribution=0.0
+            )]
         )
+
 
 @functools.lru_cache(maxsize=128)
 def process_url(url: str) -> ScanningResult:
