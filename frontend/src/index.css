@@ -78,27 +78,27 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: "Clash Display", sans-serif;
   font-weight: 700;
-  letter-spacing: -0.05em;
-  line-height: 0.9;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
   color: #111111;
 }
 
 h1 {
   font-weight: 700;
-  letter-spacing: -0.05em;
-  line-height: 0.9;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
 }
 
 h2 {
   font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 0.95;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
 }
 
 h3 {
   font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.0;
+  letter-spacing: 0em;
+  line-height: 1.1;
 }
 
 /* Buttons & interactive elements */
@@ -118,7 +118,7 @@ code, pre, kbd, samp, .font-mono {
 /* Utility classes */
 .font-display {
   font-family: "Clash Display", sans-serif;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.01em;
 }
 
 .font-body {

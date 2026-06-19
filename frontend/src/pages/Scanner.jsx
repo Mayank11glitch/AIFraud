@@ -152,7 +152,7 @@ const Scanner = () => {
         
         {/* Header Section */}
         <div ref={titleRef} className="reveal blur-in flex flex-col gap-4 mb-4 text-center items-center">
-          <h1 className="font-display text-[#111111] text-5xl md:text-6xl font-bold tracking-[-0.04em] leading-none">
+          <h1 className="font-display text-[#111111] text-5xl md:text-6xl font-bold tracking-normal leading-none">
             Content Scanner
           </h1>
           <p className="font-body text-[#838282] text-lg font-normal leading-relaxed max-w-2xl">
@@ -203,7 +203,7 @@ const Scanner = () => {
                   <span className="material-symbols-outlined text-[24px]">{isNative ? 'photo_camera' : 'cloud_upload'}</span>
                 </div>
                 <div className="flex max-w-[480px] flex-col items-center gap-3">
-                  <p className="font-display text-[#f2f2f2] text-2xl font-semibold tracking-[-0.02em] text-center">
+                  <p className="font-display text-[#f2f2f2] text-2xl font-semibold tracking-normal text-center">
                     {selectedFile ? selectedFile.name : (isNative ? "Tap to capture or select" : "Drag & Drop file here")}
                   </p>
                   <p className="font-body text-[#b6b5b5] text-sm font-normal text-center">
@@ -291,7 +291,7 @@ const Scanner = () => {
               <span className="material-symbols-outlined text-[20px] text-[#111111]">speed</span>
             </div>
             <div>
-              <h3 className="font-display text-[#111111] text-xl font-semibold mb-2 tracking-[-0.02em]">Fast Analysis</h3>
+              <h3 className="font-display text-[#111111] text-xl font-semibold mb-2 tracking-normal">Fast Analysis</h3>
               <p className="font-body text-[#838282] text-[14px] leading-relaxed">Results in seconds using our advanced detection engine.</p>
             </div>
           </div>
@@ -301,7 +301,7 @@ const Scanner = () => {
               <span className="material-symbols-outlined text-[20px] text-[#111111]">shield_lock</span>
             </div>
             <div>
-              <h3 className="font-display text-[#111111] text-xl font-semibold mb-2 tracking-[-0.02em]">Secure &amp; Private</h3>
+              <h3 className="font-display text-[#111111] text-xl font-semibold mb-2 tracking-normal">Secure &amp; Private</h3>
               <p className="font-body text-[#838282] text-[14px] leading-relaxed">Your files are encrypted and automatically deleted after scanning.</p>
             </div>
           </div>
@@ -311,7 +311,7 @@ const Scanner = () => {
               <span className="material-symbols-outlined text-[20px] text-[#111111]">psychology</span>
             </div>
             <div>
-              <h3 className="font-display text-[#111111] text-xl font-semibold mb-2 tracking-[-0.02em]">AI Powered</h3>
+              <h3 className="font-display text-[#111111] text-xl font-semibold mb-2 tracking-normal">AI Powered</h3>
               <p className="font-body text-[#838282] text-[14px] leading-relaxed">Trained on millions of known scam patterns and phishing attempts.</p>
             </div>
           </div>

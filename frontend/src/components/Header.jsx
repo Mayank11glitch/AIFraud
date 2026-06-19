@@ -74,7 +74,7 @@ const Header = () => {
         </div>
         <Link
           to="/"
-          className="font-display text-2xl font-bold tracking-[-0.05em]"
+          className="font-display text-2xl font-bold tracking-normal"
           style={{ color: '#111111' }}
         >
           ScamDetect AI
@@ -169,7 +169,7 @@ const Header = () => {
             >
               close
             </button>
-            <h2 className="text-2xl font-display font-bold mb-6 text-[#111111] uppercase tracking-tighter">
+            <h2 className="text-2xl font-display font-bold mb-6 text-[#111111] uppercase tracking-normal">
               {isLoginTab ? 'Access Terminal' : 'Register Operator'}
             </h2>
             

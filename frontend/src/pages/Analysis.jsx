@@ -19,7 +19,7 @@ const Analysis = () => {
       <main className="flex-1 px-4 md:px-10 lg:px-40 py-24 flex justify-center w-full bg-[#f2f2f2] text-[#111111]">
         <div className="flex flex-col items-center justify-center gap-6 border border-[rgba(30,30,30,0.1)] bg-white p-16 max-w-[600px] w-full">
           <span className="material-symbols-outlined text-[64px] text-[#b6b5b5]">search_off</span>
-          <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-[#111111]">No Analysis Data</h2>
+          <h2 className="font-display text-3xl font-bold tracking-normal text-[#111111]">No Analysis Data</h2>
           <p className="font-body text-[#838282] max-w-[400px] text-center">Please run a scan through the detection engine first to generate a threat intelligence report.</p>
           <Link to="/scan" className="mt-4 px-8 py-3 bg-[#111111] text-[#f2f2f2] font-body text-[11px] font-bold uppercase tracking-[0.15em] border border-[#111111] hover:bg-transparent hover:text-[#111111] transition-colors">Start Scan Engine</Link>
         </div>
@@ -60,7 +60,7 @@ const Analysis = () => {
           <div className="absolute top-0 left-0 w-2 h-full bg-[#111111]"></div>
           
           <div className="flex flex-col gap-2 pl-4">
-            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight leading-none text-[#111111]">
+            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-normal leading-none text-[#111111]">
               Analysis Report
             </h1>
             <p className="font-mono text-[#838282] text-xs font-bold tracking-widest uppercase mt-2">
@@ -95,7 +95,7 @@ const Analysis = () => {
               <div className="relative w-48 h-48 flex items-center justify-center border-4 border-[#111111] rounded-full p-2">
                 <div className="w-full h-full rounded-full border border-[rgba(30,30,30,0.2)] flex items-center justify-center relative">
                   <div className="absolute flex flex-col items-center justify-center text-center">
-                    <span className="font-display text-5xl font-bold tracking-[-0.04em] text-[#111111] leading-none">{scanResult.risk_score}</span>
+                    <span className="font-display text-5xl font-bold tracking-normal text-[#111111] leading-none">{scanResult.risk_score}</span>
                     <span className="font-mono text-[10px] font-bold text-[#838282] uppercase tracking-[0.2em] mt-2">Score</span>
                   </div>
                 </div>

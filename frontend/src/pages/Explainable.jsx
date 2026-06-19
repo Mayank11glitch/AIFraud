@@ -16,7 +16,7 @@ const Explainable = () => {
           <div className="absolute top-0 left-0 w-full h-[3px] bg-[#111111]"></div>
           
           <span className="material-symbols-outlined text-[64px] text-[#b6b5b5]">psychology_alt</span>
-          <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-[#111111] text-center">No AI Explanations</h2>
+          <h2 className="font-display text-3xl font-bold tracking-normal text-[#111111] text-center">No AI Explanations</h2>
           <p className="font-body text-[#838282] max-w-[400px] text-center mb-4">Please submit content to the detection engine first to view the Explainable AI rationale.</p>
           <Link to="/scan" className="px-8 py-3 bg-[#111111] text-[#f2f2f2] font-body text-[11px] font-bold uppercase tracking-[0.15em] border border-[#111111] hover:bg-transparent hover:text-[#111111] transition-colors">Start Engine</Link>
         </div>
@@ -44,7 +44,7 @@ const Explainable = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pb-6 border-b-[3px] border-[#111111]">
           <div className="flex flex-col gap-2">
-            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-[-0.04em] leading-none text-[#111111]">
+            <h1 className="font-display text-4xl md:text-5xl font-bold tracking-normal leading-none text-[#111111]">
               Explainable AI Log
             </h1>
             <p className="font-mono text-[#838282] text-xs font-bold tracking-widest uppercase mt-2">
@@ -74,7 +74,7 @@ const Explainable = () => {
                 Engine Confidence: &gt;98%
               </div>
             </div>
-            <h3 className="font-display text-2xl font-bold leading-tight tracking-[-0.03em] text-[#111111] mt-2">
+            <h3 className="font-display text-2xl font-bold leading-tight tracking-normal text-[#111111] mt-2">
               The detection model assigned a <span className="underline decoration-2">{scanResult.risk_score}% threat score</span> based on {scanResult.threat_categories.length} distinct signatures.
             </h3>
             <p className="font-body text-sm text-[#444444] max-w-[500px]">
@@ -97,7 +97,7 @@ const Explainable = () => {
         </div>
 
         {/* Explainability Breakdown */}
-        <h2 className="font-display text-2xl font-bold leading-tight tracking-[-0.03em] mt-8 mb-2 flex items-center justify-between border-b border-[rgba(30,30,30,0.1)] pb-4">
+        <h2 className="font-display text-2xl font-bold leading-tight tracking-normal mt-8 mb-2 flex items-center justify-between border-b border-[rgba(30,30,30,0.1)] pb-4">
           <span>Structural Indicators</span>
           <span className="material-symbols-outlined text-[#b6b5b5]">account_tree</span>
         </h2>
@@ -112,7 +112,7 @@ const Explainable = () => {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-[16px] text-[#111111]">emergency</span>
-                    <h3 className="font-display text-lg font-bold tracking-tight text-[#111111] leading-none">{explanation.feature}</h3>
+                    <h3 className="font-display text-lg font-bold tracking-normal text-[#111111] leading-none">{explanation.feature}</h3>
                   </div>
                   <span className="font-mono text-[10px] font-bold tracking-wider px-2 py-1 bg-[#f2f2f2] border border-[rgba(30,30,30,0.1)] text-[#111111]">
                     +{explanation.risk_contribution.toFixed(1)}%
@@ -133,7 +133,7 @@ const Explainable = () => {
           ) : (
             <div className="col-span-full flex flex-col items-center justify-center p-16 bg-[#f9f9f9] border border-[rgba(30,30,30,0.1)] text-center">
               <span className="material-symbols-outlined text-[48px] text-[#b6b5b5] mb-4">gpp_good</span>
-              <h3 className="font-display text-2xl font-bold tracking-tight text-[#111111]">No Malicious Artifacts</h3>
+              <h3 className="font-display text-2xl font-bold tracking-normal text-[#111111]">No Malicious Artifacts</h3>
               <p className="font-mono text-[11px] tracking-widest text-[#838282] max-w-sm mt-2 uppercase">Analysis verified clean source material.</p>
             </div>
           )}

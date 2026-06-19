@@ -96,7 +96,7 @@ const Behavioral = () => {
     <main className="flex flex-col gap-12 flex-1 py-16 px-6 lg:px-12 max-w-6xl mx-auto w-full">
       {/* Header Section */}
       <section className="flex flex-col gap-4">
-        <h1 className="font-display text-[#111111] text-5xl md:text-6xl font-bold tracking-[-0.04em] leading-none">
+        <h1 className="font-display text-[#111111] text-5xl md:text-6xl font-bold tracking-normal leading-none">
           Behavioral Scam Analysis
         </h1>
         <p className="font-body text-[#838282] text-lg font-normal leading-relaxed max-w-2xl">
@@ -112,7 +112,7 @@ const Behavioral = () => {
             <h3 className="font-body text-[#b6b5b5] text-[11px] font-bold uppercase tracking-[0.1em] mb-3">
               Persuasion Techniques Breakdown
             </h3>
-            <h2 className="font-display text-[#111111] text-3xl md:text-4xl font-semibold tracking-[-0.03em] leading-none truncate">
+            <h2 className="font-display text-[#111111] text-3xl md:text-4xl font-semibold tracking-normal leading-none truncate">
               {latestScan?.risk_level || "Unknown"} Risk Profile
             </h2>
             <div className="flex gap-3 items-center mt-4">
@@ -205,7 +205,7 @@ const Behavioral = () => {
       <section className="flex flex-col gap-8 mb-12">
         <div className="flex flex-col gap-4">
           <div>
-            <h2 className="font-display text-[#111111] text-3xl font-semibold tracking-[-0.03em] leading-tight mb-2">
+            <h2 className="font-display text-[#111111] text-3xl font-semibold tracking-normal leading-tight mb-2">
               Persuasion Categories Detailed
             </h2>
             <p className="font-body text-[#838282] text-base font-normal leading-relaxed max-w-2xl">
@@ -235,7 +235,7 @@ const Behavioral = () => {
               </span>
             </div>
             <div className="flex flex-col flex-1">
-              <h3 className="font-display text-[#111111] text-2xl font-semibold mb-3 tracking-[-0.02em]">Urgency</h3>
+              <h3 className="font-display text-[#111111] text-2xl font-semibold mb-3 tracking-normal">Urgency</h3>
               <p className="font-body text-[#838282] text-[15px] font-normal leading-relaxed mb-6 flex-1">
                 Attempts to force immediate action without thinking. Often uses phrases like "Act now," "Limited time offer," or countdown timers.
               </p>
@@ -259,7 +259,7 @@ const Behavioral = () => {
               </span>
             </div>
             <div className="flex flex-col flex-1">
-              <h3 className="font-display text-[#111111] text-2xl font-semibold mb-3 tracking-[-0.02em]">Fear</h3>
+              <h3 className="font-display text-[#111111] text-2xl font-semibold mb-3 tracking-normal">Fear</h3>
               <p className="font-body text-[#838282] text-[15px] font-normal leading-relaxed mb-6 flex-1">
                 Threats of negative consequences, legal action, or financial loss. Designed to bypass rational thought through panic.
               </p>
@@ -283,7 +283,7 @@ const Behavioral = () => {
               </span>
             </div>
             <div className="flex flex-col flex-1">
-              <h3 className="font-display text-[#111111] text-2xl font-semibold mb-3 tracking-[-0.02em]">Authority</h3>
+              <h3 className="font-display text-[#111111] text-2xl font-semibold mb-3 tracking-normal">Authority</h3>
               <p className="font-body text-[#838282] text-[15px] font-normal leading-relaxed mb-6 flex-1">
                 Impersonation of trusted figures, government agencies, or known organizations to demand compliance.
               </p>
@@ -307,7 +307,7 @@ const Behavioral = () => {
               </span>
             </div>
             <div className="flex flex-col flex-1">
-              <h3 className="font-display text-[#111111] text-2xl font-semibold mb-3 tracking-[-0.02em]">Reward</h3>
+              <h3 className="font-display text-[#111111] text-2xl font-semibold mb-3 tracking-normal">Reward</h3>
               <p className="font-body text-[#838282] text-[15px] font-normal leading-relaxed mb-6 flex-1">
                 Promises of unrealistic financial gains, prizes, or exclusive deals to exploit greed or hope.
               </p>

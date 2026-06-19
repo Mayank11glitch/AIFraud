@@ -44,7 +44,7 @@ const Architecture = () => {
                 
                 {/* Header Section */}
                 <div className="flex flex-col items-center text-center gap-6 border-b-[3px] border-[#111111] pb-16 relative">
-                    <h1 ref={titleRef} className="font-display text-5xl md:text-7xl font-bold tracking-[-0.04em] leading-none uppercase">
+                    <h1 ref={titleRef} className="font-display text-5xl md:text-7xl font-bold tracking-normal leading-none uppercase">
                         Architecture
                     </h1>
                     <p ref={introRef} className="font-body text-[#444444] max-w-2xl text-lg relative z-10 px-4">
@@ -62,7 +62,7 @@ const Architecture = () => {
                 <div className="w-full">
                     <div className="flex items-center gap-3 border-b border-[rgba(30,30,30,0.1)] pb-4 mb-8">
                         <span className="material-symbols-outlined text-[#111111]">route</span>
-                        <h2 className="font-display text-[#111111] text-2xl font-bold tracking-[-0.02em] uppercase">Inference Pipeline</h2>
+                        <h2 className="font-display text-[#111111] text-2xl font-bold tracking-normal uppercase">Inference Pipeline</h2>
                     </div>
 
                     <div className="bg-white border border-[rgba(30,30,30,0.1)] p-8 md:p-12 overflow-x-auto relative">
@@ -93,18 +93,18 @@ const Architecture = () => {
                             <div className="flex justify-center w-full gap-4">
                                 <div className="flex-[0.8] max-w-[120px] bg-transparent border-2 border-dashed border-[#838282] flex items-center justify-center font-mono text-[10px] font-bold uppercase tracking-widest text-[#838282] h-16">Direct</div>
                                 <div className="flex-1 max-w-[140px] bg-[#111111] text-[#f2f2f2] border border-[#111111] flex flex-col items-center justify-center h-16 transition-transform hover:-translate-y-1">
-                                    <span className="font-display font-bold text-sm tracking-tight">BS4 Scraper</span>
+                                    <span className="font-display font-bold text-sm tracking-normal">BS4 Scraper</span>
                                 </div>
                                 <div className="flex-1 max-w-[140px] bg-[#111111] text-[#f2f2f2] border border-[#111111] flex flex-col items-center justify-center h-16 transition-transform hover:-translate-y-1">
-                                    <span className="font-display font-bold text-sm tracking-tight">EasyOCR</span>
+                                    <span className="font-display font-bold text-sm tracking-normal">EasyOCR</span>
                                     <span className="font-mono text-[8px] text-[#b6b5b5] tracking-widest mt-1">Extract</span>
                                 </div>
                                 <div className="flex-1 max-w-[140px] bg-[#111111] text-[#f2f2f2] border border-[#111111] flex flex-col items-center justify-center h-16 transition-transform hover:-translate-y-1">
-                                    <span className="font-display font-bold text-sm tracking-tight">OpenCV</span>
+                                    <span className="font-display font-bold text-sm tracking-normal">OpenCV</span>
                                     <span className="font-mono text-[8px] text-[#b6b5b5] tracking-widest mt-1">Frames</span>
                                 </div>
                                 <div className="flex-1 max-w-[140px] bg-[#111111] text-[#f2f2f2] border border-[#111111] flex flex-col items-center justify-center h-16 transition-transform hover:-translate-y-1">
-                                    <span className="font-display font-bold text-sm tracking-tight">Whisper</span>
+                                    <span className="font-display font-bold text-sm tracking-normal">Whisper</span>
                                     <span className="font-mono text-[8px] text-[#b6b5b5] tracking-widest mt-1">Audio</span>
                                 </div>
                             </div>
@@ -121,14 +121,14 @@ const Architecture = () => {
                             <div className="flex justify-center w-full gap-12 mt-4 relative">
                                 <div className="w-[300px] bg-[#f9f9f9] border border-[#111111] p-6 text-center relative group">
                                     <div className="absolute top-0 left-0 w-full h-[4px] bg-[#111111]"></div>
-                                    <h3 className="font-display text-xl font-bold tracking-tight text-[#111111] uppercase mb-1">mDeBERTa-v3</h3>
+                                    <h3 className="font-display text-xl font-bold tracking-normal text-[#111111] uppercase mb-1">mDeBERTa-v3</h3>
                                     <p className="font-mono text-[9px] text-[#111111] font-bold uppercase tracking-[0.2em] mb-4">Zero-Shot NLP</p>
                                     <p className="font-body text-xs text-[#838282]">Structural processing of all text strings, HTML, OCR text, and transcripts.</p>
                                 </div>
 
                                 <div className="w-[300px] bg-[#f9f9f9] border border-[#111111] p-6 text-center relative group">
                                     <div className="absolute top-0 left-0 w-full h-[4px] bg-[#444444]"></div>
-                                    <h3 className="font-display text-xl font-bold tracking-tight text-[#111111] uppercase mb-1">OpenAI CLIP</h3>
+                                    <h3 className="font-display text-xl font-bold tracking-normal text-[#111111] uppercase mb-1">OpenAI CLIP</h3>
                                     <p className="font-mono text-[9px] text-[#111111] font-bold uppercase tracking-[0.2em] mb-4">Zero-Shot Vision</p>
                                     <p className="font-body text-xs text-[#838282]">Semantic embedding of raw images and extracted video keyframes.</p>
                                 </div>
@@ -138,7 +138,7 @@ const Architecture = () => {
 
                             {/* Final Output */}
                             <div className="bg-[#111111] border border-[#111111] px-16 py-6 text-center text-[#f2f2f2]">
-                                <h3 className="font-display text-2xl font-bold uppercase tracking-[-0.02em]">Combined Threat Score</h3>
+                                <h3 className="font-display text-2xl font-bold uppercase tracking-normal">Combined Threat Score</h3>
                                 <p className="font-mono text-[10px] text-[#838282] font-bold tracking-[0.1em] mt-2">+ EXPLAINABLE ATTRIBUTION LOG</p>
                             </div>
                         </div>
@@ -151,13 +151,13 @@ const Architecture = () => {
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center gap-3 border-b border-[rgba(30,30,30,0.1)] pb-4 mb-2">
                             <span className="material-symbols-outlined text-[#111111]">memory</span>
-                            <h2 className="font-display text-[#111111] text-2xl font-bold tracking-[-0.02em] uppercase">Core Models</h2>
+                            <h2 className="font-display text-[#111111] text-2xl font-bold tracking-normal uppercase">Core Models</h2>
                         </div>
                         <div ref={pipelineRef} className="grid grid-cols-1 gap-4">
                             {models.map((model, idx) => (
                                 <div key={idx} className="bg-white p-6 border border-[rgba(30,30,30,0.1)] flex flex-col gap-3 group hover:border-[#111111] transition-colors reveal">
                                     <div className="flex items-center justify-between">
-                                        <h3 className="font-display text-xl font-bold text-[#111111] uppercase tracking-tight">{model.name}</h3>
+                                        <h3 className="font-display text-xl font-bold text-[#111111] uppercase tracking-normal">{model.name}</h3>
                                         <div className={`w-3 h-3 ${model.color}`}></div>
                                     </div>
                                     <p className="font-mono text-[10px] font-bold text-[#838282] uppercase tracking-[0.2em] border-b border-[rgba(30,30,30,0.05)] pb-3">
@@ -175,7 +175,7 @@ const Architecture = () => {
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center gap-3 border-b border-[rgba(30,30,30,0.1)] pb-4 mb-2">
                             <span className="material-symbols-outlined text-[#111111]">psychology</span>
-                            <h2 className="font-display text-[#111111] text-2xl font-bold tracking-[-0.02em] uppercase">Transparency Engine</h2>
+                            <h2 className="font-display text-[#111111] text-2xl font-bold tracking-normal uppercase">Transparency Engine</h2>
                         </div>
                         <div className="bg-[#111111] p-8 border border-[#111111] flex flex-col gap-6 h-full text-[#f2f2f2]">
                             <p className="font-body text-[#b6b5b5] text-sm leading-relaxed">
@@ -184,7 +184,7 @@ const Architecture = () => {
                             
                             <div className="flex-1 bg-white border border-[#444444] p-6 text-[#111111]">
                                 <div className="font-mono text-[10px] text-[#838282] uppercase tracking-widest mb-4 font-bold border-b border-[rgba(30,30,30,0.1)] pb-2">Log Output Example</div>
-                                <div className="font-display font-bold text-lg leading-tight tracking-tight mb-2 uppercase">
+                                <div className="font-display font-bold text-lg leading-tight tracking-normal mb-2 uppercase">
                                     Urgency Manipulation / <span className="text-[#838282]">90% Weight</span>
                                 </div>
                                 <div className="font-body text-sm text-[#444444] leading-relaxed pl-4 border-l-2 border-[#111111]">

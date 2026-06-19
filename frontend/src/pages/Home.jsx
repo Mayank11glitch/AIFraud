@@ -117,7 +117,7 @@ const Home = () => {
         {/* Graffiti Marquee Background */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center translate-y-[-5%] opacity-[0.03]">
           <div className="animate-marquee whitespace-nowrap">
-            <span className="font-display text-[22vw] font-bold leading-none select-none px-4 tracking-[-0.05em]">
+            <span className="font-display text-[22vw] font-bold leading-none select-none px-4 tracking-normal">
               ZERO TRUST THREAT DETECTION ZERO TRUST THREAT DETECTION ZERO TRUST
             </span>
           </div>
