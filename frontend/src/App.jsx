@@ -13,14 +13,13 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
-function App() {
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
+function AppContent() {
   return (
-    <GoogleOAuthProvider clientId={clientId}>
-      <Router>
-        <AuthProvider>
-          <NotificationProvider>
+    <Router>
+      <AuthProvider>
+        <NotificationProvider>
           <div className="relative flex min-h-screen flex-col group/design-root overflow-x-hidden w-full">
             <Header />
             <Routes>
@@ -41,8 +40,22 @@ function App() {
         </NotificationProvider>
       </AuthProvider>
     </Router>
-    </GoogleOAuthProvider>
   );
+}
+
+function App() {
+  // Only wrap with GoogleOAuthProvider when a valid client ID is configured.
+  // Without it the app still works — users can log in with username/password.
+  // Google Sign-In button inside the modal is conditionally hidden in Header.
+  if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID') {
+    return (
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <AppContent />
+      </GoogleOAuthProvider>
+    );
+  }
+
+  return <AppContent />;
 }
 
 export default App;

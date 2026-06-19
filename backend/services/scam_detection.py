@@ -4,6 +4,11 @@ import os
 import tempfile
 import functools
 import urllib.parse
+import warnings
+
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+warnings.filterwarnings("ignore", message=".*unauthenticated requests.*")
+warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub.*")
 from models.schemas import ScanningResult, FeatureExplanation
 
 # =====================================================

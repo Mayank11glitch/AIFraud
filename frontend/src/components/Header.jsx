@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 const Header = () => {
   const location = useLocation();
   const { user, login, register, logout, loginWithGoogle } = useContext(AuthContext);
@@ -232,22 +234,26 @@ const Header = () => {
               </button>
             </form>
 
-            <div className="mt-6 flex items-center justify-center">
-              <span className="text-xs font-bold uppercase tracking-wider font-body text-[#838282] bg-[#f2f2f2] px-2 relative z-10">OR</span>
-              <div className="absolute left-8 right-8 h-[2px] bg-[#111111]/10 mt-[1px]"></div>
-            </div>
+            {GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID' && (
+              <>
+                <div className="mt-6 flex items-center justify-center">
+                  <span className="text-xs font-bold uppercase tracking-wider font-body text-[#838282] bg-[#f2f2f2] px-2 relative z-10">OR</span>
+                  <div className="absolute left-8 right-8 h-[2px] bg-[#111111]/10 mt-[1px]"></div>
+                </div>
 
-            <div className="mt-6 flex justify-center">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => {
-                  setError('Google Sign-In failed.');
-                }}
-                theme="filled_black"
-                shape="rectangular"
-                text={isLoginTab ? "signin_with" : "signup_with"}
-              />
-            </div>
+                <div className="mt-6 flex justify-center">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => {
+                      setError('Google Sign-In failed.');
+                    }}
+                    theme="filled_black"
+                    shape="rectangular"
+                    text={isLoginTab ? "signin_with" : "signup_with"}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

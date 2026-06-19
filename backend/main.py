@@ -1,12 +1,18 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+import os
+import warnings
+
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+warnings.filterwarnings("ignore", message=".*unauthenticated requests.*")
+warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub.*")
+
 from api.routes import scanner
 from api.routes import history
 from api.routes import stats
 from api.routes import export
 from api.routes import auth
 from api.ws_manager import manager
-import os
 
 # Import our database modules
 from database import engine, Base
